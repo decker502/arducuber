@@ -1,3 +1,5 @@
+#ifndef MCMOVES_H
+#define MCMOVES_H
 /*
  * Title               : MindCuber Move Tables
  *
@@ -2543,3 +2545,5 @@ const byte mtd8[] PROGMEM = {
 };
 
 // END
+
+#endif

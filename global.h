@@ -1,6 +1,8 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#define DEBUG
+
 //-----------------------------------------------------------------------------
 // Background task and routines to use color sensor as flashing light
 //-----------------------------------------------------------------------------
@@ -49,16 +51,11 @@
 #define M_SCAN 2
 #define MAX_M_POWER 255
 
-#define BTNCENTER 0
-#define BTNLEFT 1
-#define BTNRIGHT 2
 
 #define P_LOW 160
 #define P_HIGH 180
 
 #define M_WAIT_MUL 4
-
-const int TiltOffset = 12;
 
 #define NFACE 6 // number of faces in cube
 #define POS(FF, OO) (((FF)*8) + (OO))
@@ -71,10 +68,22 @@ const int EEPROM_ID_ADDR = 0;
 const int EEPROM_DATA_ADDR = 1;
 const byte EEPROM_ID = 0x99;
 
-int multipliers[] = {3, 1, 3};
+// 齿轮比
+const int ratio[] = {3, 1, 3};
+
+const int32_t tiltOffset = 12;
+
+// 电机位置
 int32_t positions[] = {0, 0, 0};
-long white_rgb[] = {910, 960, 1024};
+
+int32_t turnTablePosition = 0;
+int32_t turnTableOffset = 24;
+
+bool scanOK = true;
 
 int32_t motor_base_pos = 0;
+int start = 0;
+    bool solved = false;
+
 
 #endif
