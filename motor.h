@@ -145,9 +145,6 @@ void moveRel(int m, int power, int16_t degree, bool wait = true)
     if (wait)
     {
         waitForArrival(m, positions[m]);
-        motors[m].hold();
-        motors[m].brake();
-        // motors[m].brake();
     }
 #ifdef DEBUG
     Serial.print(" :");

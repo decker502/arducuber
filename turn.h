@@ -48,9 +48,9 @@ void Spin45()
 //     Serial.print(" turnTablePosition:");
 //     Serial.print(turnTablePosition);
 
-    turnTablePosition -= 45 * ratio[M_TURN];
+    // turnTablePosition -= 45 * ratio[M_TURN];
     // moveAbs(M_TURN, 70, turnTablePosition + turnTableOffset);
-    moveAbs(M_TURN, 70, turnTablePosition);
+    moveRel(M_TURN, 70, -45 * ratio[M_TURN]);
 
 //     Serial.println(" ");
 //     Serial.println(" ");
@@ -65,9 +65,9 @@ void Spin(int n)
         moveAbs(M_SCAN, 75, 15);
     };
 
-    turnTablePosition -= n * (90 * ratio[M_TURN]);
+    // turnTablePosition -= n * (90 * ratio[M_TURN]);
 
-    moveAbs(M_TURN, 100, turnTablePosition);
+    moveRel(M_TURN, 100, -n * (90 * ratio[M_TURN]));
 }
 
 #endif

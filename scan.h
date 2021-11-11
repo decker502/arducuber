@@ -178,7 +178,7 @@ void ScanCorner(int face, int piece)
     {
 
         Spin45();
-        moveAbs(M_SCAN, 80, -560, true);
+        moveAbs(M_SCAN, 90, -560, true);
         ScanPiece(face, piece);
     }
     else
@@ -200,7 +200,7 @@ void ScanEdge(int face, int piece)
     if (scanOK)
     {
         Spin45();
-        moveAbs(M_SCAN, 80, -610, true);
+        moveAbs(M_SCAN, 90, -610, true);
         ScanPiece(face, piece);
     }
     else
@@ -249,20 +249,20 @@ void ScanFace(int face, int offset)
         }
         // hold(M_TURN);
 
-        int32_t pos = turnTablePosition - getPosition(M_TURN);
-#ifdef DEBUG
-        Serial.print(" turnTablePosition:");
-        Serial.println(turnTablePosition);
-        Serial.print(" pos:");
-        Serial.print(pos);
-#endif
+//         int32_t pos = turnTablePosition - getPosition(M_TURN);
+// #ifdef DEBUG
+//         Serial.print(" turnTablePosition:");
+//         Serial.println(turnTablePosition);
+//         Serial.print(" pos:");
+//         Serial.print(pos);
+// #endif
 
-        if (pos > 0)
-        {
-            turnTablePosition -= (pos - (pos % (360 * 36 / 12)));
-        }
+//         if (pos > 0)
+//         {
+//             turnTablePosition -= (pos - (pos % (360 * 36 / 12)));
+//         }
 
-        moveAbs(M_TURN, 75, turnTablePosition);
+//         moveAbs(M_TURN, 75, turnTablePosition);
 
     } while (!scanOK);
 #ifdef DEBUG
