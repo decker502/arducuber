@@ -1,7 +1,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define DEBUG
+// #define DEBUG
 
 //-----------------------------------------------------------------------------
 // Background task and routines to use color sensor as flashing light
@@ -82,7 +82,7 @@ int32_t turnTableOffset = 24;
 bool scanOK = true;
 
 int32_t motor_base_pos = 0;
-int start = 0;
+unsigned long start = 0;
     bool solved = false;
 
 

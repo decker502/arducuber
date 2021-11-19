@@ -544,11 +544,11 @@ public:
 
       int p = pos(face, i);
       Serial.print(" rgb(");
-      Serial.print(clrs[i].r);
+      Serial.print(clrs[p].r);
       Serial.print(",");
-      Serial.print(clrs[i].g);
+      Serial.print(clrs[p].g);
       Serial.print(",");
-      Serial.print(clrs[i].b);
+      Serial.print(clrs[p].b);
       Serial.print(") ");
     }
     Serial.println();

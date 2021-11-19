@@ -519,8 +519,7 @@ public:
             int i = (idx - 1) * mtb;
             byte b = pgm_read_byte_near(mtd + i);
             i++;
-            Serial.print("solve_phase0:");
-            Serial.println(b, HEX);
+
             if (b != 0xFF)
             {
                 const int mvm = mtb * 2 - 1;

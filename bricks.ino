@@ -39,27 +39,65 @@ void setup()
   motors[M_TILT].begin();
   motors[M_SCAN].begin();
 
+  motors[M_SCAN].pidSetTunings(2.64, 23.6, 0.1207317073);
+
   initialize();
 
   OCR0A = 0x7F;
   TIMSK0 |= _BV(OCIE0A);
 }
 
+bool stable(int m)
+{
+}
 // This function will be called every millisecond.
 // It just calls update() for each motor.
 ISR(TIMER0_COMPA_vect)
 {
   static unsigned char count_ms = 0;
+  static int stableFactor = 0;
+
   if (++count_ms == 50)
   {
     motors[M_TURN].update();
+    // if (!motors[M_TURN].settledAtPosition(positions[M_TURN]))
+    //   motors[M_TURN].update();
+    // else
+    // {
+    //   motors[M_TURN].brake();
+    // }
     motors[M_TILT].update();
-    motors[M_SCAN].update();
+    // if (!motors[M_TILT].settledAtPosition(positions[M_TILT]))
+    //   motors[M_TILT].update();
+    // else
+    // {
+    //   motors[M_TILT].brake();
+    // }
 
-    //     Serial.print("_pidOutput: ");
-    // Serial.print(motors[M_TILT]._pidOutput);
-    // Serial.print(", pos: ");
-    // Serial.println(motors[M_TILT]._pidInput);
+    if (abs(positions[M_SCAN] - motors[M_SCAN].getPosition()) < 5)
+    {
+      stableFactor++;
+    }
+    else
+    {
+      if (stableFactor < 5)
+      {
+        motors[M_SCAN].update();
+        stableFactor = 0;
+      }
+    }
+
+    // if (motors[M_SCAN].settledAtPosition(positions[M_SCAN]))
+    //   motors[M_SCAN].brake();
+    // if (!motors[M_SCAN].settledAtPosition(positions[M_SCAN]))
+    //   motors[M_SCAN].update();
+    // else
+    // {
+    // }
+
+    // motors[M_TURN].update();
+    // motors[M_TILT].update();
+    // motors[M_SCAN].update();
 
     count_ms = 0;
   }
@@ -167,13 +205,13 @@ void CubeInsert()
       count = 0;
     if (leftPressed())
     {
-      moveRel(M_TURN, 75, 2, false);
-      turnTablePosition += 2;
+      moveRel(M_TURN, 75, 2 * ratio[M_TURN], true);
+      turnTablePosition += 2 * ratio[M_TURN];
     }
     if (rightPressed())
     {
-      moveRel(M_TURN, 75, -2, false);
-      turnTablePosition -= 2;
+      moveRel(M_TURN, 75, -2 * ratio[M_TURN], true);
+      turnTablePosition -= 2 * ratio[M_TURN];
     }
   }
 }
@@ -499,9 +537,15 @@ void loop()
 
   // cubeColors.print();
 
-// Spin(1);
-// delay(1000);
-// Spin(-1);
+  // Spin(1);
+  // delay(1000);
+  // Spin(-1);
+
+  // int start = millis();
+  //         moveRel(M_TURN, -38, ratio[M_TURN] * 360);
+  //     Serial.print("time : ");
+  //     Serial.println(millis() - start);
+
   // Tilt(2);
   // TiltAway();
   // delay(2000);

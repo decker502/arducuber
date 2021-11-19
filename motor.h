@@ -28,10 +28,24 @@ bool isOverwrite(int32_t a, int32_t b)
 }
 
 // Go to the specified position using PID, but wait until the motor arrives
-void waitForArrival(int m, int32_t position)
+// void waitForArrival(int m, int32_t position)
+// {
+
+//     while (!motors[m].settledAtPosition(position))
+//     {
+//         delay(1);
+//     }
+// }
+
+void waitForArrival(int m)
 {
-    while (!motors[m].settledAtPosition(position))
+    int factor = 0;
+    while (factor < 10)
     {
+        if (abs(positions[m] - motors[m].getPosition()) < 5)
+        {
+            factor++;
+        }
         delay(1);
     }
 }
@@ -76,18 +90,18 @@ void moveAbs(int m, int power, int16_t degree, bool wait = true)
     motors[m].goToPosition(positions[m]);
     if (wait)
     {
-        waitForArrival(m, positions[m]);
-    //     motors[m].hold();
-    //     motors[m].brake();
-    // Serial.println();
-    // Serial.print(" moveAbs pos :");
-    // Serial.print(motors[m].getPosition());
-    // Serial.print(" _pidOutput :");
-    // Serial.print(motors[M_SCAN]._pidOutput);
-    // Serial.print(" positions:");
-    // Serial.print(positions[M_SCAN]);
+        waitForArrival(m);
+        // waitForArrival(m, positions[m]);
 
-    // Serial.println();
+        // Serial.println();
+        // Serial.print(" moveAbs pos :");
+        // Serial.print(motors[m].getPosition());
+        // Serial.print(" _pidOutput :");
+        // Serial.print(motors[M_SCAN]._pidOutput);
+        // Serial.print(" positions:");
+        // Serial.print(positions[M_SCAN]);
+
+        // Serial.println();
         // motors[m].brake();
     }
 #ifdef DEBUG
@@ -144,7 +158,9 @@ void moveRel(int m, int power, int16_t degree, bool wait = true)
     motors[m].goToPosition(positions[m]);
     if (wait)
     {
-        waitForArrival(m, positions[m]);
+        waitForArrival(m);
+        // waitForArrival(m, positions[m]);
+        // motors[m].brake();
     }
 #ifdef DEBUG
     Serial.print(" :");
@@ -163,7 +179,10 @@ void hold(int m)
 {
     motors[m].hold();
 }
-
+void brake(int m)
+{
+    motors[m].brake();
+}
 void endstop(int m, int power, int wait = 200)
 {
     // BricktronicsMotor 旋转旋转方向与EV3相反, 需要取反
@@ -211,6 +230,13 @@ int32_t getPosition(int m)
     // BricktronicsMotor 旋转一圈为 720度， EV3 一圏为 360 度;
     // BricktronicsMotor 旋转旋转方向与EV3相反, 需要取反
     return -motors[m].getPosition() / 2;
+}
+
+int32_t getTargetPosition(int m)
+{
+    // BricktronicsMotor 旋转一圈为 720度， EV3 一圏为 360 度;
+    // BricktronicsMotor 旋转旋转方向与EV3相反, 需要取反
+    return -positions[m] / 2;
 }
 
 #endif

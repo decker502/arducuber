@@ -8,35 +8,31 @@
 // {
 
 //     turnTablePosition -= 45 * ratio[M_TURN];
-//     int32_t turnPos = turnTablePosition + turnTableOffset;
-
 //     int32_t pos = getPosition(M_TURN);
 
 // #ifdef DEBUG
-//     Serial.print("Spin45 turnTablePosition:");
-//     Serial.print(turnTablePosition);
-//     Serial.print(" turnTableOffset:");
-//     Serial.println(turnTableOffset);
-//     Serial.print(" pos:");
+//     Serial.print("Spin45 pos:");
 //     Serial.println(pos);
-//     Serial.print(" turnPos:");
-//     Serial.println(turnPos);
+//     Serial.print(" turnTablePosition:");
+//     Serial.println(turnTablePosition);
 //     Serial.print(" time:");
 //     Serial.println(millis() - start);
 //     Serial.println();
 // #endif
 
-//     if (pos < turnPos)
+//     if (pos < turnTablePosition)
 //     {
 //         Serial.print(" time:");
 //         Serial.println(millis() - start);
 
-//         scanOK = false;
+        // scanOK = false;
 //         return;
 //     }
 
-//     while (pos >= turnPos)
+//     // while (pos >= turnTablePosition - (-3 * ratio[M_TURN]))
+//     while (pos >= turnTablePosition)
 //     {
+//         delay(1);
 //         pos = getPosition(M_TURN);
 //     }
 // }

@@ -8,23 +8,18 @@ void TiltAway()
 {
     if (20 < getPosition(M_TILT))
     {
-        moveAbs(M_TILT, 70, 20);
+        moveAbs(M_TILT, 80, 20);
     }
-    Serial.println("TiltAway2");
 
-    moveAbs(M_TILT, 20, 10);
-    Serial.println("TiltAway3");
+    moveAbs(M_TILT, 70, 10);
 }
 
 void TiltCal()
 {
     moveRel(M_TILT, 40, 10);
     endstop(M_TILT, -20);
-    Serial.print("reset:");
 
     reset(M_TILT);
-
-    Serial.println("TiltAway");
 
     TiltAway();
 }

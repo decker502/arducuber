@@ -40,11 +40,21 @@ void ScanRGB(int face, int piece, uint8_t *rgb)
     //     delay(scanRGBDelay / 1000);
     // colorSensor.readColor(&rgb[0], &rgb[1], &rgb[2]);
     uint8_t c = 0;
+#ifdef DEBUG
+    unsigned long start = millis();
     Serial.println();
     Serial.print(" scan pos before:");
     Serial.print(getPosition(M_SCAN));
+    Serial.print(" _pidOutput :");
+    Serial.print(motors[M_SCAN]._pidOutput);
+    Serial.print(" turn pos:");
+    Serial.print(getPosition(M_TURN));
+    Serial.println();
+#endif
+
     colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-    // colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
+#ifdef DEBUG
+
     Serial.print(" after :");
     Serial.print(getPosition(M_SCAN));
     Serial.print(" _pidOutput :");
@@ -53,8 +63,11 @@ void ScanRGB(int face, int piece, uint8_t *rgb)
     Serial.print(positions[M_SCAN]);
     Serial.print(" turn pos:");
     Serial.print(getPosition(M_TURN));
+    Serial.print(" time:");
+    Serial.print(millis() - start);
 
     Serial.println();
+#endif
 
     // sum = rgb[0] + rgb[1] + rgb[2];
     // if (sum < 0)
@@ -97,14 +110,7 @@ void ScanPiece(int face, int piece)
     Serial.print(piece);
 
 #endif
-    delay(1000);
-    int start = millis();
-    // while(busy(M_SCAN)) {
-    // //        Serial.print(" scan pos:");
-    // // Serial.println(getPosition(M_SCAN));
-    // }
-    Serial.print(" time1:");
-    Serial.print(millis() - start);
+    // delay(101);
     int32_t pos = getPosition(M_TURN);
 
     if (scanOK)
@@ -131,17 +137,8 @@ void ScanPiece(int face, int piece)
 
     int32_t offset = pos - getPosition(M_TURN);
 #ifdef DEBUG
-    Serial.print(" pos :");
-    Serial.print(pos);
-    Serial.print(" offset:");
-    Serial.print(offset);
-    Serial.print(" turnTableOffset:");
-    Serial.print(turnTableOffset);
-    Serial.print(" Scan pos:");
-    Serial.print(getPosition(M_SCAN));
-    Serial.print(" time:");
-    Serial.print(millis() - start);
 
+    cubeColors.print(face);
 #endif
 
     if (offset > 2 && offset < 100)
@@ -154,19 +151,26 @@ void ScanPiece(int face, int piece)
     Serial.println();
 #endif
 }
+const int scanDelay = 300;
 
 void ScanMiddle(int face)
 {
+#ifdef DEBUG
     Serial.print("ScanMiddle; face:");
     Serial.println(face);
     Serial.println();
 
-    moveAbs(M_SCAN, 100, -720);
+    start = millis();
+#endif
+    moveAbs(M_SCAN, 100, -720, false);
+    waitForArrival(M_SCAN);
+    delay(100);
     ScanPiece(face, 8);
 }
 
 void ScanCorner(int face, int piece)
 {
+    start = millis();
 #ifdef DEBUG
     Serial.print("ScanCorner; face:");
     Serial.print(face);
@@ -177,8 +181,21 @@ void ScanCorner(int face, int piece)
     if (scanOK)
     {
 
-        Spin45();
-        moveAbs(M_SCAN, 90, -560, true);
+        start = millis();
+        moveAbs(M_SCAN, 100, -570, false);
+        // delay(scanDelay);
+
+        // Spin45();
+        moveRel(M_TURN, 70, -45 * ratio[M_TURN], false);
+#ifdef DEBUG
+        Serial.print("ScanCorner; wait scan");
+        Serial.println();
+#endif
+        // waitForArrival(M_SCAN, positions[M_SCAN]);
+        waitForArrival(M_SCAN);
+        // waitForArrival(M_TURN, positions[M_TURN]);
+        waitForArrival(M_TURN);
+        delay(100);                                                                                                                                                 
         ScanPiece(face, piece);
     }
     else
@@ -190,6 +207,7 @@ void ScanCorner(int face, int piece)
 void ScanEdge(int face, int piece)
 {
 #ifdef DEBUG
+    start = millis();
     Serial.print("ScanEdge; face:");
     Serial.print(face);
     Serial.print(" piece:");
@@ -199,8 +217,23 @@ void ScanEdge(int face, int piece)
 
     if (scanOK)
     {
-        Spin45();
-        moveAbs(M_SCAN, 90, -610, true);
+        start = millis();
+        moveAbs(M_SCAN, 100, -610, false);
+        // delay(scanDelay);
+
+        // Spin45();
+        moveRel(M_TURN, 70, -45 * ratio[M_TURN], false);
+#ifdef DEBUG
+        Serial.print("ScanEdge; wait scan");
+        Serial.println();
+#endif
+
+        // waitForArrival(M_SCAN, positions[M_SCAN]);
+        // waitForArrival(M_TURN, positions[M_TURN]);
+        waitForArrival(M_SCAN);
+        waitForArrival(M_TURN);
+
+        delay(100);
         ScanPiece(face, piece);
     }
     else
@@ -224,12 +257,16 @@ void ScanFace(int face, int offset)
     {
         scanOK = true;
         ScanMiddle(face);
-        // move(M_SCAN, 70);
+
+        brake(M_TILT);
+        // move(M_SCAN, 100);
 
         // while (getPosition(M_SCAN) <= -650)
-        //     ;
+        // {
+        //     delay(1);
+        // }
         // move(M_TURN, -70);
-        // moveRel(M_TURN, -38, ratio[M_TURN] * 360, false);
+        // moveRel(M_TURN, 38, -ratio[M_TURN] * 360, false);
         start = millis();
         // for (int i = 0; i < 4; i++)
         // {
@@ -249,20 +286,20 @@ void ScanFace(int face, int offset)
         }
         // hold(M_TURN);
 
-//         int32_t pos = turnTablePosition - getPosition(M_TURN);
-// #ifdef DEBUG
-//         Serial.print(" turnTablePosition:");
-//         Serial.println(turnTablePosition);
-//         Serial.print(" pos:");
-//         Serial.print(pos);
-// #endif
+        //         int32_t pos = turnTablePosition - getPosition(M_TURN);
+        // #ifdef DEBUG
+        //         Serial.print(" turnTablePosition:");
+        //         Serial.println(turnTablePosition);
+        //         Serial.print(" pos:");
+        //         Serial.print(pos);
+        // #endif
 
-//         if (pos > 0)
-//         {
-//             turnTablePosition -= (pos - (pos % (360 * 36 / 12)));
-//         }
+        //         if (pos > 0)
+        //         {
+        //             turnTablePosition -= (pos - (pos % (360 * 36 / 12)));
+        //         }
 
-//         moveAbs(M_TURN, 75, turnTablePosition);
+        //         moveAbs(M_TURN, 75, turnTablePosition);
 
     } while (!scanOK);
 #ifdef DEBUG
