@@ -77,14 +77,17 @@ ISR(TIMER0_COMPA_vect)
     if (abs(positions[M_SCAN] - motors[M_SCAN].getPosition()) < 5)
     {
       stableFactor++;
+      if (stableFactor > 5)
+        stableFactor = 5;
     }
     else
     {
-      if (stableFactor < 5)
-      {
-        motors[M_SCAN].update();
-        stableFactor = 0;
-      }
+      stableFactor = 0;
+    }
+
+    if (stableFactor < 5)
+    {
+      motors[M_SCAN].update();
     }
 
     // if (motors[M_SCAN].settledAtPosition(positions[M_SCAN]))
@@ -310,10 +313,10 @@ bool Solve(byte *cube)
       Serial.println("determine_colors...");
       cubeColors.determine_colors(cube, i);
 
-      cubeSolver.calcInput(cube);
+      solverCompo.calcInput(cube);
 
       Serial.print("Input:");
-      Serial.println(cubeSolver.solverInput);
+      Serial.println(solverCompo.solverInput);
 
       Serial.println("valid_pieces...");
       bool is_valid = cubeSolver.valid_pieces(cube);
@@ -324,6 +327,7 @@ bool Solve(byte *cube)
         t = i;
         pieces_valid++;
         Serial.println("is_valid");
+        cubeColors.print();
 
         // display_cube(cube);
         if (cubeSolver.solve(cube))

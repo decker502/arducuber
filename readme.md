@@ -47,3 +47,13 @@ Pin 1 includes a 910 ohm resistor connected to GND, which is used as the ID for 
 ### 转盘的改造
 
 https://tengxiao.wang/index.php/archives/38/
+
+
+
+### 感谢
+
+http://www.diy-robots.com/?p=9
+https://rubiks-cube-solver.com/zh/
+cube20.org
+https://tomas.rokicki.com/cubecontest/
+http://www.pazhong.net/?p=435

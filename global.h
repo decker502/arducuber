@@ -66,7 +66,7 @@
 
 const int EEPROM_ID_ADDR = 0;
 const int EEPROM_DATA_ADDR = 1;
-const byte EEPROM_ID = 0x99;
+const uint8_t EEPROM_ID = 0x99;
 
 // 齿轮比
 const int ratio[] = {3, 1, 3};

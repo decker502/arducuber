@@ -811,10 +811,10 @@ public:
             {
                 solverInput[i * 4 + 3 + cornerStart] = ' ';
             }
-            // else
-            // {
-            //     solverInput[i * 4 + 3 + cornerStart] = '\n';
-            // }
+            else
+            {
+                solverInput[i * 4 + 3 + cornerStart] = '\0';
+            }
         }
     }
 

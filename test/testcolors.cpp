@@ -58,4 +58,5 @@ int main(int argc, char **argv)
     cubeColors.sortEdge(0);
     printOrder(4);
     cout << endl;
+
 }

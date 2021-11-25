@@ -28,14 +28,14 @@ bool isOverwrite(int32_t a, int32_t b)
 }
 
 // Go to the specified position using PID, but wait until the motor arrives
-// void waitForArrival(int m, int32_t position)
-// {
+void waitForArrival(int m, int32_t position)
+{
 
-//     while (!motors[m].settledAtPosition(position))
-//     {
-//         delay(1);
-//     }
-// }
+    while (!motors[m].settledAtPosition(position))
+    {
+        delay(1);
+    }
+}
 
 void waitForArrival(int m)
 {

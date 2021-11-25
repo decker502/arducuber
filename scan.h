@@ -23,7 +23,7 @@ void ScanCal()
     //根据实际测试，比 mindcuber的值略大
     endstop(M_SCAN, 70);
 
-    moveRel(M_SCAN, 70, -100);
+    moveRel(M_SCAN, 100, -100);
     endstop(M_SCAN, 50, 500);
     reset(M_SCAN);
     ScanAway();
