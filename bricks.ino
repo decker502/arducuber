@@ -47,9 +47,6 @@ void setup()
   TIMSK0 |= _BV(OCIE0A);
 }
 
-bool stable(int m)
-{
-}
 // This function will be called every millisecond.
 // It just calls update() for each motor.
 ISR(TIMER0_COMPA_vect)
@@ -90,18 +87,6 @@ ISR(TIMER0_COMPA_vect)
       motors[M_SCAN].update();
     }
 
-    // if (motors[M_SCAN].settledAtPosition(positions[M_SCAN]))
-    //   motors[M_SCAN].brake();
-    // if (!motors[M_SCAN].settledAtPosition(positions[M_SCAN]))
-    //   motors[M_SCAN].update();
-    // else
-    // {
-    // }
-
-    // motors[M_TURN].update();
-    // motors[M_TILT].update();
-    // motors[M_SCAN].update();
-
     count_ms = 0;
   }
 }
@@ -132,45 +117,6 @@ void initialize()
   turnTableOffset = 24;
 
   bool scanOK = true;
-
-  readWhiteRGB();
-}
-
-void readWhiteRGB()
-{
-  // Read the white calibration value from EEPROM
-  // byte id = EEPROM.read(EEPROM_ID_ADDR);
-  // if (id == EEPROM_ID)
-  // {
-  //   for (int i = 0; i < 3; i++)
-  //   {
-  //     byte highByte = EEPROM.read(EEPROM_DATA_ADDR + (i * 4));
-  //     byte lowByte = EEPROM.read(EEPROM_DATA_ADDR + (i * 4) + 1);
-  //     int16_t highWord = word(highByte, lowByte);
-
-  //     highByte = EEPROM.read(EEPROM_DATA_ADDR + (i * 4) + 2);
-  //     lowByte = EEPROM.read(EEPROM_DATA_ADDR + (i * 4) + 3);
-  //     int16_t lowWord = word(highByte, lowByte);
-
-  //     white_rgb[i] = makeLong(highWord, lowWord);
-  //   }
-  // }
-}
-
-void writeWhiteRGB()
-{
-  // Read the white calibration value from EEPROM
-  // EEPROM.write(EEPROM_ID_ADDR, EEPROM_ID);
-
-  // for (int i = 0; i < 3; i++)
-  // {
-  //   int16_t hw = highWord(white_rgb[i]);
-  //   int16_t lw = lowWord(white_rgb[i]);
-  //   EEPROM.write(EEPROM_DATA_ADDR + (i * 4), highByte(hw));
-  //   EEPROM.write(EEPROM_DATA_ADDR + (i * 4) + 1, lowByte(hw));
-  //   EEPROM.write(EEPROM_DATA_ADDR + (i * 4) + 2, highByte(lw));
-  //   EEPROM.write(EEPROM_DATA_ADDR + (i * 4) + 3, lowByte(lw));
-  // }
 }
 
 void init_cube(byte *cube)
@@ -230,61 +176,6 @@ void CubeRemove()
   }
 }
 
-int find_edge(byte *cube, byte f0, byte f1)
-{
-  byte e0;
-  FIND_EDGE(U, 1, B, 5, 0, 1);
-  FIND_EDGE(U, 7, L, 1, 2, 3);
-  FIND_EDGE(U, 5, F, 1, 4, 5);
-  FIND_EDGE(U, 3, R, 1, 6, 7);
-  FIND_EDGE(L, 3, F, 7, 8, 9);
-  FIND_EDGE(B, 7, L, 7, 10, 11);
-  FIND_EDGE(D, 7, L, 5, 12, 13);
-  FIND_EDGE(R, 3, B, 3, 14, 15);
-  FIND_EDGE(D, 5, B, 1, 16, 17);
-  FIND_EDGE(F, 3, R, 7, 18, 19);
-  FIND_EDGE(D, 3, R, 5, 20, 21);
-  FIND_EDGE(D, 1, F, 5, 22, 23);
-  return -1;
-}
-int find_corner(byte *cube, byte f0, byte f1, byte f2)
-{
-  byte c0;
-  FIND_CORNER(U, 2, B, 4, R, 2, 0, 1, 2);
-  FIND_CORNER(U, 0, L, 0, B, 6, 3, 4, 5);
-  FIND_CORNER(U, 6, F, 0, L, 2, 6, 7, 8);
-  FIND_CORNER(U, 4, R, 0, F, 2, 9, 10, 11);
-  FIND_CORNER(D, 0, L, 4, F, 6, 12, 13, 14);
-  FIND_CORNER(D, 6, B, 0, L, 6, 15, 16, 17);
-  FIND_CORNER(D, 4, R, 4, B, 2, 18, 19, 20);
-  FIND_CORNER(D, 2, F, 4, R, 6, 21, 22, 23);
-  return -1;
-}
-
-bool valid_pieces(byte *cube)
-{
-  return (find_edge(cube, U, F) >= 0) &&
-         (find_edge(cube, U, L) >= 0) &&
-         (find_edge(cube, U, B) >= 0) &&
-         (find_edge(cube, U, R) >= 0) &&
-         (find_edge(cube, F, L) >= 0) &&
-         (find_edge(cube, L, B) >= 0) &&
-         (find_edge(cube, B, R) >= 0) &&
-         (find_edge(cube, R, F) >= 0) &&
-         (find_edge(cube, D, F) >= 0) &&
-         (find_edge(cube, D, L) >= 0) &&
-         (find_edge(cube, D, B) >= 0) &&
-         (find_edge(cube, D, R) >= 0) &&
-         (find_corner(cube, U, F, L) >= 0) &&
-         (find_corner(cube, U, L, B) >= 0) &&
-         (find_corner(cube, U, B, R) >= 0) &&
-         (find_corner(cube, U, R, F) >= 0) &&
-         (find_corner(cube, D, F, R) >= 0) &&
-         (find_corner(cube, D, R, B) >= 0) &&
-         (find_corner(cube, D, B, L) >= 0) &&
-         (find_corner(cube, D, L, F) >= 0);
-}
-
 bool Solve(byte *cube)
 {
   unsigned long start_time = millis();
@@ -319,7 +210,7 @@ bool Solve(byte *cube)
       Serial.println(solverCompo.solverInput);
 
       Serial.println("valid_pieces...");
-      bool is_valid = cubeSolver.valid_pieces(cube);
+      bool is_valid = validator.valid_pieces(cube);
       // bool is_valid = valid_pieces(cube);
 
       if (is_valid)
@@ -335,6 +226,18 @@ bool Solve(byte *cube)
           solved = true;
           break;
         }
+        // solverCompo.solve();
+
+        // Serial.print("result:");
+        // for(int i = 0; i< solverCompo.resultAmount; i++) {
+        //   Serial.print(solverCompo.resultFaces[i]);
+        //   Serial.print(solverCompo.resultActions[i]);
+
+        // }
+        // Serial.println();
+        // solved = true;
+
+        // break;
       }
       else
       {
@@ -353,6 +256,8 @@ bool Solve(byte *cube)
   {
     ScanAway();
     Serial.println(" Solving..");
+
+    // rotator.rotate(solverCompo.resultFaces, solverCompo.resultActions, solverCompo.resultAmount);
 
     cubeSolver.uc = L;
     cubeSolver.fc = D;
@@ -408,97 +313,6 @@ bool Solve(byte *cube)
   return solved;
 }
 
-void testColors()
-{
-  for (int i = 0; i < NFACE; i++)
-  {
-    for (int j = 0; j < 9; j++)
-    {
-      cubeColors.setRGB(i, j, fake_rgb[cubeColors.pos(i, j)]);
-    }
-  }
-}
-
-void printRGB()
-{
-  Serial.println();
-  Serial.print("setRGB; red:");
-  Serial.print(rgb[0]);
-  Serial.print(" green:");
-  Serial.print(rgb[1]);
-  Serial.print(" blue:");
-  Serial.print(rgb[2]);
-  Serial.print(" HEX: # ");
-  Serial.print(rgb[0], HEX);
-  Serial.print(rgb[1], HEX);
-  Serial.print(rgb[2], HEX);
-  Serial.println();
-}
-void testScan()
-{
-  uint8_t c = 0;
-
-  moveAbs(M_SCAN, 100, -720); // middle
-  delay(500);
-  colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-  printRGB();
-  delay(5000);
-
-  moveAbs(M_TURN, 100, -112);
-  moveAbs(M_SCAN, 80, -553); // corner
-  colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-  printRGB();
-  delay(2000);
-
-  moveAbs(M_TURN, 100, -249);
-  moveAbs(M_SCAN, 80, -609); // edge
-
-  colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-  printRGB();
-  delay(2000);
-
-  moveAbs(M_TURN, 100, -386);
-  moveAbs(M_SCAN, 80, -562); // corner
-
-  colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-  printRGB();
-  delay(2000);
-
-  moveAbs(M_TURN, 100, -523);
-  moveAbs(M_SCAN, 80, -609); // edge
-
-  colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-  printRGB();
-  delay(2000);
-
-  moveAbs(M_TURN, 100, -660);
-  moveAbs(M_SCAN, 80, -566); // corner
-
-  colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-  printRGB();
-  delay(2000);
-
-  moveAbs(M_TURN, 100, -797);
-  moveAbs(M_SCAN, 80, -604); // edge
-
-  colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-  printRGB();
-  delay(2000);
-
-  moveAbs(M_TURN, 100, -933);
-  moveAbs(M_SCAN, 80, -562); // corner
-
-  colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-  printRGB();
-  delay(2000);
-
-  moveAbs(M_TURN, 100, -1069);
-  moveAbs(M_SCAN, 80, -608); // edge
-  colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-  printRGB();
-  delay(2000);
-}
-
 void loop()
 {
   while (!leftPressed())
@@ -524,57 +338,6 @@ void loop()
 
   TiltCal();
 
-  // lcd.clear();
-  // lcd.setCursor(0, 1);
-  // lcd.print("Reset RGB...");
-
-  // ScanMiddle(0);
-  // ScanCorner(0, 2);
-  // ScanEdge(0, 2);
-
-  // ScanCube();
-  // ScanFace(3, 2);
-  // cubeColors.print();
-  // ScanFace(3, 2);
-
-  //   ScanAway();
-
-  // cubeColors.print();
-
-  // Spin(1);
-  // delay(1000);
-  // Spin(-1);
-
-  // int start = millis();
-  //         moveRel(M_TURN, -38, ratio[M_TURN] * 360);
-  //     Serial.print("time : ");
-  //     Serial.println(millis() - start);
-
-  // Tilt(2);
-  // TiltAway();
-  // delay(2000);
-  // Solve(cube);
-  // CalScanRGB();
-  // testScan();
-  // ScanMiddle(0);
-  // while (!rightPressed())
-  // {
-  //   delay(2000);
-  //   ScanRGB(0, 0, rgb);
-  //   Serial.println();
-  //   Serial.print("setRGB; red:");
-  //   Serial.print(rgb[0]);
-  //   Serial.print(" green:");
-  //   Serial.print(rgb[1]);
-  //   Serial.print(" blue:");
-  //   Serial.print(rgb[2]);
-  //   Serial.print(" HEX: #");
-  //   Serial.print(rgb[0], HEX);
-  //   Serial.print(rgb[1], HEX);
-  //   Serial.print(rgb[2], HEX);
-  //   Serial.println();
-  // }
-
   while (true)
   {
     lcd.clear();
@@ -592,15 +355,4 @@ void loop()
     Serial.println("CubeRemove:");
     CubeRemove();
   }
-  //   motors[M_SCAN].goToPosition(180);
-  // while (!motors[M_SCAN].settledAtPosition(180))
-  //     ;
-  // moveAbs(M_SCAN, 100, -180);
-
-  // motors[M_TURN].setFixedDrive(100);
-  // motors[M_SCAN].goToPositionWaitForArrival(680);
-  // moveAbs(M_TILT, 100, 90);
-  // motors[M_TURN].goToPositionWaitForArrival(270);
-  //     Serial.print(" real:");
-  //   Serial.println(motors[M_TURN].getPosition());
 }

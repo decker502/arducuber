@@ -3,6 +3,21 @@
 
 // #define DEBUG
 
+#define U 0
+#define F 1
+#define D 2
+#define B 3
+#define R 4
+#define L 5
+
+//根据 compo算法中输出顺序确定
+// #define F 0
+// #define B 1
+// #define R 2
+// #define L 3
+// #define U 4
+// #define D 5
+
 //-----------------------------------------------------------------------------
 // Background task and routines to use color sensor as flashing light
 //-----------------------------------------------------------------------------

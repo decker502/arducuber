@@ -40,6 +40,12 @@ int main(int argc, char **argv)
         solver.calcInput(cube);
         cout << solver.solverInput << endl;
         solver.solve();
+        cout << "result:";
+        for (int i = 0; i < solver.resultAmount; i++) {
+            cout << "FBRLUD"[solver.resultFaces[i]] <<  solver.resultActions[i];
+
+        }
+        cout << endl;
     }
     else
     {

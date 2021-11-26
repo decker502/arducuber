@@ -12,16 +12,20 @@
 #include "color.h"
 #include "dist.h"
 #include "solver.h"
+#include "validator.h"
 #include "solvercompo.h"
+#include "rotator.h"
 
 Led led = Led();
 // Yahboom colorSensor = Yahboom();
 GY33 colorSensor = GY33();
 
 CubeColors cubeColors = CubeColors();
+Validator validator = Validator();
 CubeSolver cubeSolver = CubeSolver();
 CubeSolverCompo solverCompo = CubeSolverCompo();
 SensorDist sensorDist = SensorDist();
+Rotator rotator = Rotator();
 
 const int rs = 49, en = 48, d4 = 47, d5 = 46, d6 = 45, d7 = 44;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);

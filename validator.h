@@ -44,8 +44,35 @@
             return I0;                                  \
     }
 
+class Validator
+{
+public:
+    Validator() {}
+    bool valid_pieces(uint8_t *cube)
+    {
+        return (find_edge(cube, U, F) >= 0) &&
+               (find_edge(cube, U, L) >= 0) &&
+               (find_edge(cube, U, B) >= 0) &&
+               (find_edge(cube, U, R) >= 0) &&
+               (find_edge(cube, F, L) >= 0) &&
+               (find_edge(cube, L, B) >= 0) &&
+               (find_edge(cube, B, R) >= 0) &&
+               (find_edge(cube, R, F) >= 0) &&
+               (find_edge(cube, D, F) >= 0) &&
+               (find_edge(cube, D, L) >= 0) &&
+               (find_edge(cube, D, B) >= 0) &&
+               (find_edge(cube, D, R) >= 0) &&
+               (find_corner(cube, U, F, L) >= 0) &&
+               (find_corner(cube, U, L, B) >= 0) &&
+               (find_corner(cube, U, B, R) >= 0) &&
+               (find_corner(cube, U, R, F) >= 0) &&
+               (find_corner(cube, D, F, R) >= 0) &&
+               (find_corner(cube, D, R, B) >= 0) &&
+               (find_corner(cube, D, B, L) >= 0) &&
+               (find_corner(cube, D, L, F) >= 0);
+    }
 
- int find_edge(uint8_t *cube, uint8_t f0, uint8_t f1)
+    int find_edge(uint8_t *cube, uint8_t f0, uint8_t f1)
     {
         uint8_t e0;
         FIND_EDGE(U, 1, B, 5, 0, 1);
@@ -76,28 +103,6 @@
         FIND_CORNER(D, 2, F, 4, R, 6, 21, 22, 23);
         return -1;
     }
+};
 
-bool valid_pieces(uint8_t *cube)
-    {
-        return (find_edge(cube, U, F) >= 0) &&
-               (find_edge(cube, U, L) >= 0) &&
-               (find_edge(cube, U, B) >= 0) &&
-               (find_edge(cube, U, R) >= 0) &&
-               (find_edge(cube, F, L) >= 0) &&
-               (find_edge(cube, L, B) >= 0) &&
-               (find_edge(cube, B, R) >= 0) &&
-               (find_edge(cube, R, F) >= 0) &&
-               (find_edge(cube, D, F) >= 0) &&
-               (find_edge(cube, D, L) >= 0) &&
-               (find_edge(cube, D, B) >= 0) &&
-               (find_edge(cube, D, R) >= 0) &&
-               (find_corner(cube, U, F, L) >= 0) &&
-               (find_corner(cube, U, L, B) >= 0) &&
-               (find_corner(cube, U, B, R) >= 0) &&
-               (find_corner(cube, U, R, F) >= 0) &&
-               (find_corner(cube, D, F, R) >= 0) &&
-               (find_corner(cube, D, R, B) >= 0) &&
-               (find_corner(cube, D, B, L) >= 0) &&
-               (find_corner(cube, D, L, F) >= 0);
-    }
 #endif

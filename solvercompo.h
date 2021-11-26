@@ -13,6 +13,7 @@
     b = TEMP;
 // number 65='A' is often subtracted to convert char ABC... to number 0,1,2,...
 #define CHAROFFSET 65
+#define MOVE_MAX 100
 
 class CubeSolverCompo
 {
@@ -373,15 +374,16 @@ public:
                 //     j=strchr(faces,c)-faces;
                 // ...from command line and get face number of facelet
 
-                if(val[i] == 2) {
-                    index= (i * (val[i] + 1)) + f;
-                } else {
-                    index= (i * (val[i] + 1)) + f - 12;
-
+                if (val[i] == 2)
+                {
+                    index = (i * (val[i] + 1)) + f;
+                }
+                else
+                {
+                    index = (i * (val[i] + 1)) + f - 12;
                 }
 
-
-			// cout << i <<  " f: "<< f << " val: " << int(val[i]) << " arg:" << solverInput[index] << endl;
+                // cout << i <<  " f: "<< f << " val: " << int(val[i]) << " arg:" << solverInput[index] << endl;
                 j = strchr(faces, solverInput[index]) - faces;
                 // keep track of principal facelet for orientation
                 if (j > k)
@@ -401,28 +403,44 @@ public:
             ori[order[i] - CHAROFFSET] = mor % val[i];
         }
 
-    // for(int i = 0; i < 20; i++){
-    //     cout << i << " pos: " << int(pos[i])
-    //     << " ori:" << int(ori[i]) <<endl;
-    // }
+        // for(int i = 0; i < 20; i++){
+        //     cout << i << " pos: " << int(pos[i])
+        //     << " ori:" << int(ori[i]) <<endl;
+        // }
         // solve the cube
         // four phases
+        resultAmount = 0;
         for (; phase < 8; phase += 2)
         {
+
             // try each depth till solved
             for (j = 0; !searchphase(j, 0, 9); j++)
                 ;
             // output result of this phase
-            // for (i = 0; i < j; i++)
+            for (i = 0; i < j; i++)
+            {
+                if (resultAmount > MOVE_MAX)
+                {
+                    return false;
+                }
+
+                resultFaces[resultAmount] = moveme[i];
+                resultActions[resultAmount++] = moveamount[i];
+            }
             //     cout << "FBRLUD"[moveme[i]] << moveamount[i];
             // cout<<" ";
         }
+
+        return true;
     }
 
 public:
     bool valid;
 
     char solverInput[24 + 12 + 24 + 7];
+    int resultFaces[MOVE_MAX];
+    int resultActions[MOVE_MAX];
+    int resultAmount;
 
     // RLFBUD is the face order used for input, so that a correctly oriented
     // piece in the input has its 'highest value' facelet first. The rest of the
