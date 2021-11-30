@@ -214,9 +214,7 @@ void endstop(int m, int power, int wait = 200)
             }
         }
     };
-    positions[m] = motors[m].getPosition();
-
-    Serial.println(" ");
+    // positions[m] = motors[m].getPosition();
 }
 
 void reset(int m)

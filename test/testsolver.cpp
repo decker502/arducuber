@@ -10,6 +10,7 @@ using namespace std;
 
 CubeColors cubeColors;
 CubeSolverCompo solver;
+Validator validator;
 uint8_t cube[NFACE * 8];
 
 void init_cube(uint8_t *cube)
@@ -28,27 +29,32 @@ int main(int argc, char **argv)
     {
         for (int j = 0; j < 9; j++)
         {
-            cubeColors.setRGB(i, j, fake_colors[3][i * 9 + j]);
+            cubeColors.setRGB(i, j, fake_colors[5][i * 9 + j]);
         }
     }
 
-    cubeColors.determine_colors(cube, 0);
-    cout << "valid_pieces..." << endl;
-    bool is_valid = valid_pieces(cube);
-    if (is_valid)
+    for (int c = 0; c < 12; c++)
     {
-        solver.calcInput(cube);
-        cout << solver.solverInput << endl;
-        solver.solve();
-        cout << "result:";
-        for (int i = 0; i < solver.resultAmount; i++) {
-            cout << "FBRLUD"[solver.resultFaces[i]] <<  solver.resultActions[i];
-
+        cubeColors.determine_colors(cube, c);
+        cout << "valid_pieces..." << endl;
+        bool is_valid = validator.valid_pieces(cube);
+        if (is_valid)
+        {
+            solver.calcInput(cube);
+            cout << solver.solverInput << endl;
+            solver.solve();
+            cout << "result:";
+            for (int i = 0; i < solver.count; i++)
+            {
+                cout << "FBRLUD"[solver.soulutions[i]] << solver.actions[i];
+                // cout << solver.soulutions[i] << ":" << solver.actions[i] << " ";
+            }
+            cout << endl;
+            break;
         }
-        cout << endl;
-    }
-    else
-    {
-        cout << "not valid" << endl;
+        else
+        {
+            cout << "not valid" << endl;
+        }
     }
 }

@@ -9,8 +9,15 @@
 #include "btn.h"
 #include "led.h"
 #include "color.h"
-#include "mcmoves.h"
 #include "fakedata.h"
+
+#include "validator.h"
+#include "solvercompo.h"
+#include "rotator.h"
+
+Validator validator = Validator();
+Rotator rotator = Rotator();
+CubeSolverCompo solverCompo = CubeSolverCompo();
 
 void setup()
 {
@@ -52,37 +59,55 @@ void setup()
 ISR(TIMER0_COMPA_vect)
 {
   static unsigned char count_ms = 0;
-  static int stableFactor = 0;
+  static int stableFactor[3] = {0, 0, 0};
 
   if (++count_ms == 50)
   {
-    motors[M_TURN].update();
-    // if (!motors[M_TURN].settledAtPosition(positions[M_TURN]))
-    //   motors[M_TURN].update();
-    // else
-    // {
-    //   motors[M_TURN].brake();
-    // }
-    motors[M_TILT].update();
-    // if (!motors[M_TILT].settledAtPosition(positions[M_TILT]))
-    //   motors[M_TILT].update();
-    // else
-    // {
-    //   motors[M_TILT].brake();
-    // }
-
-    if (abs(positions[M_SCAN] - motors[M_SCAN].getPosition()) < 5)
+    // motors[M_TURN].update();
+    if (abs(positions[M_TURN] - motors[M_TURN].getPosition()) < 5)
     {
-      stableFactor++;
-      if (stableFactor > 5)
-        stableFactor = 5;
+      stableFactor[M_TURN]++;
+      if (stableFactor[M_TURN] > 5)
+        stableFactor[M_TURN] = 5;
     }
     else
     {
-      stableFactor = 0;
+      stableFactor[M_TURN] = 0;
     }
 
-    if (stableFactor < 5)
+    if (stableFactor[M_TURN] < 5)
+    {
+      motors[M_TURN].update();
+    }
+
+    if (abs(positions[M_TILT] - motors[M_TILT].getPosition()) < 5)
+    {
+      stableFactor[M_TILT]++;
+      if (stableFactor[M_TILT] > 5)
+        stableFactor[M_TILT] = 5;
+    }
+    else
+    {
+      stableFactor[M_TILT] = 0;
+    }
+
+    if (stableFactor[M_TILT] < 5)
+    {
+      motors[M_TILT].update();
+    }
+
+    if (abs(positions[M_SCAN] - motors[M_SCAN].getPosition()) < 5)
+    {
+      stableFactor[M_SCAN]++;
+      if (stableFactor[M_SCAN] > 5)
+        stableFactor[M_SCAN] = 5;
+    }
+    else
+    {
+      stableFactor[M_SCAN] = 0;
+    }
+
+    if (stableFactor[M_SCAN] < 5)
     {
       motors[M_SCAN].update();
     }
@@ -204,13 +229,9 @@ bool Solve(byte *cube)
       Serial.println("determine_colors...");
       cubeColors.determine_colors(cube, i);
 
-      solverCompo.calcInput(cube);
-
-      Serial.print("Input:");
-      Serial.println(solverCompo.solverInput);
-
       Serial.println("valid_pieces...");
       bool is_valid = validator.valid_pieces(cube);
+
       // bool is_valid = valid_pieces(cube);
 
       if (is_valid)
@@ -220,24 +241,25 @@ bool Solve(byte *cube)
         Serial.println("is_valid");
         cubeColors.print();
 
-        // display_cube(cube);
-        if (cubeSolver.solve(cube))
+        solverCompo.calcInput(cube);
+
+        Serial.print("Input:");
+        Serial.println(solverCompo.solverInput);
+
+        solverCompo.solve();
+
+        Serial.print(" result: ");
+        for (int i = 0; i < solverCompo.count; i++)
         {
-          solved = true;
-          break;
+          Serial.print(solverCompo.soulutions[i]);
+          Serial.print(":");
+          Serial.print(solverCompo.actions[i]);
+          Serial.print(" ");
         }
-        // solverCompo.solve();
+        Serial.println();
+        solved = true;
 
-        // Serial.print("result:");
-        // for(int i = 0; i< solverCompo.resultAmount; i++) {
-        //   Serial.print(solverCompo.resultFaces[i]);
-        //   Serial.print(solverCompo.resultActions[i]);
-
-        // }
-        // Serial.println();
-        // solved = true;
-
-        // break;
+        break;
       }
       else
       {
@@ -257,34 +279,7 @@ bool Solve(byte *cube)
     ScanAway();
     Serial.println(" Solving..");
 
-    // rotator.rotate(solverCompo.resultFaces, solverCompo.resultActions, solverCompo.resultAmount);
-
-    cubeSolver.uc = L;
-    cubeSolver.fc = D;
-
-    for (int i = 0; i < cubeSolver.solve_n; i++)
-    {
-      int fi = cubeSolver.solve_fce[i];
-      int ri = cubeSolver.solve_rot[i];
-      int fo = opposite[fi];
-      int rn = 0;
-      for (int j = i + 1; rn == 0 && j < cubeSolver.solve_n; j++)
-      {
-        if (cubeSolver.solve_fce[j] != fo)
-          rn = cubeSolver.solve_rot[j];
-      }
-
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("Solving...");
-      lcd.setCursor(0, 1);
-      lcd.print("Move of ");
-      lcd.print(i + 1);
-      lcd.print(" solve_n: ");
-      lcd.print(cubeSolver.solve_n);
-
-      cubeSolver.manipulate(cube, fi, ri, rn);
-    }
+    rotator.rotate(solverCompo.soulutions, solverCompo.actions, solverCompo.count);
   }
   else
   {
@@ -313,6 +308,60 @@ bool Solve(byte *cube)
   return solved;
 }
 
+void testSolve(byte *cube)
+{
+  Color colors[NFACE * 9];
+
+  for (int i = 0; i < NFACE; i++)
+  {
+    for (int j = 0; j < 9; j++)
+    {
+      cubeColors.setRGB(i, j, fake_colors[5][i * 9 + j]);
+    }
+  }
+  ScanAway();
+
+  for (int i = 0; i < 12; i++)
+  {
+    cubeColors.determine_colors(cube, i);
+    Serial.print("valid_pieces...");
+    bool is_valid = validator.valid_pieces(cube);
+    if (is_valid)
+    {
+      solverCompo.calcInput(cube);
+      Serial.print(solverCompo.solverInput);
+      Serial.println();
+      solverCompo.solve();
+      Serial.print("result:");
+      Serial.print(" solverCompo.count:");
+      Serial.print(solverCompo.count);
+      for (int i = 0; i < solverCompo.count; i++)
+      {
+        // Serial.print("FBRLUD"[solverCompo.soulutions[i]] << solverCompo.actions[i];
+        Serial.print(solverCompo.soulutions[i]);
+        Serial.print(" :");
+        Serial.print(solverCompo.actions[i]);
+        Serial.print(" ");
+      }
+      Serial.println();
+      solved = true;
+
+      break;
+    }
+    else
+    {
+      Serial.println("not valid");
+    }
+  }
+
+  if (solved)
+  {
+    ScanAway();
+    Serial.println(" Solving..");
+
+    rotator.rotate(solverCompo.soulutions, solverCompo.actions, solverCompo.count);
+  }
+}
 void loop()
 {
   while (!leftPressed())
@@ -337,6 +386,8 @@ void loop()
   lcd.print("Reset tilt...");
 
   TiltCal();
+
+  // testSolve(cube);
 
   while (true)
   {

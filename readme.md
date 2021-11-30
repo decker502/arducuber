@@ -49,6 +49,11 @@ Pin 1 includes a 910 ohm resistor connected to GND, which is used as the ID for 
 https://tengxiao.wang/index.php/archives/38/
 
 
+### 生成常量数据
+
+cd ./gen
+g++ table.cpp -Wno-write-strings
+./a.out > ../movestable.h
 
 ### 感谢
 

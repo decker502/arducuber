@@ -10,13 +10,11 @@
 #define R 4
 #define L 5
 
+#define NFACE 6 // number of faces in cube
+#define POS(FF, OO) (((FF)*8) + (OO))
+
 //根据 compo算法中输出顺序确定
-// #define F 0
-// #define B 1
-// #define R 2
-// #define L 3
-// #define U 4
-// #define D 5
+const int opposite[NFACE] = {F, B, R, L, U, D};
 
 //-----------------------------------------------------------------------------
 // Background task and routines to use color sensor as flashing light
@@ -72,8 +70,7 @@
 
 #define M_WAIT_MUL 4
 
-#define NFACE 6 // number of faces in cube
-#define POS(FF, OO) (((FF)*8) + (OO))
+
 
 #define makeLong(hi, low) (((long)hi) << 16 | (low))
 #define highWord(w) ((w) >> 16)
