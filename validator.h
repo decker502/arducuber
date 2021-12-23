@@ -1,14 +1,14 @@
 #ifndef VALIDATOR_H
 #define VALIDATOR_H
 
+#include "global.h"
+
 #define CUBE_UP 0
 #define CUBE_FRONT 1
 #define CUBE_DOWN 2
 #define CUBE_BACK 3
 #define CUBE_RIGHT 4
 #define CUBE_LEFT 5
-
-#define POS(FF, OO) (((FF)*8) + (OO))
 
 #define FIND_EDGE(F0, O0, F1, O1, I0, I1) \
     e0 = cube[POS(F0, O0)];               \

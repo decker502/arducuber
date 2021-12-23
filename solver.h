@@ -17,22 +17,20 @@
 // Average: 42 moves in 5 seconds
 // Range:   about 37 to 47 moves in 1 to 10 seconds
 
-#define TARGET  42
+#define TARGET 42
 
-#define NPIECE   3    // maximum number of pieces indexed in one phase
-#define MV_MAX   100  // maximum number of moves per solve
-
+#define NPIECE 3   // maximum number of pieces indexed in one phase
+#define MV_MAX 100 // maximum number of moves per solve
 
 const byte opposite[] = {CUBE_DOWN, CUBE_BACK, CUBE_UP, CUBE_FRONT, CUBE_LEFT, CUBE_RIGHT};
 
 #define MAP(UU, FF) (imap[((UU)*NFACE) + (FF)] * NFACE)
 
 const byte imap[] = {
-    /*       U   F   CUBE_DOWN   B   R   L
-  /* U */
-    -1, 0, -1, 1, 2, 3,
+    /*       U   F   D   B   R   L */
+    /* U */  -1, 0, -1, 1, 2, 3,
     /* F */ 4, -1, 5, -1, 6, 7,
-    /* CUBE_DOWN */ -1, 8, -1, 9, 10, 11,
+    /* D */ -1, 8, -1, 9, 10, 11,
     /* B */ 12, -1, 13, -1, 14, 15,
     /* R */ 16, 17, 18, 19, -1, -1,
     /* L */ 20, 21, 22, 23, -1, -1};
@@ -672,7 +670,6 @@ public:
     byte pmap[NFACE];
 
     Validator validator;
-
 };
 
 #endif

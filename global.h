@@ -3,13 +3,6 @@
 
 // #define DEBUG
 
-// #define FU 0
-// #define FF 1
-// #define FD 2
-// #define FB 3
-// #define FR 4
-// #define FL 5
-
 //-----------------------------------------------------------------------------
 // Background task and routines to use color sensor as flashing light
 //-----------------------------------------------------------------------------
@@ -28,15 +21,6 @@
 #define T_90 180
 #define T_CUT 10
 #define T_OVR 57
-
-// #define T_SCNT -720
-// #define T_SCNR -570
-// #define T_SEDG -610
-
-// tcs34725 single 
-// #define T_SCNT -700
-// #define T_SCNR -555
-// #define T_SEDG -590
 
 // tcs34725 two 
 #define T_SCNT -680
@@ -75,18 +59,13 @@ uint8_t white_rgb[3] = {255, 255, 255};
 // 齿轮比
 const int ratio[] = {3, 1, 3};
 
-const int32_t tiltOffset = 12;
-
 // 电机位置
 int32_t positions[] = {0, 0, 0};
 
-int32_t turnTablePosition = 0;
-int32_t turnTableOffset = 24;
+int32_t c = 24;
 
 bool scanOK = true;
 
-int32_t motor_base_pos = 0;
 unsigned long start = 0;
-bool solved = false;
 
 #endif

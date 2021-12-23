@@ -91,18 +91,7 @@ void moveAbs(int m, int power, int16_t degree, bool wait = true)
     if (wait)
     {
         waitForArrival(m);
-        // waitForArrival(m, positions[m]);
 
-        // Serial.println();
-        // Serial.print(F(" moveAbs pos :"));
-        // Serial.print(motors[m].getPosition());
-        // Serial.print(F(" _pidOutput :"));
-        // Serial.print(motors[M_SCAN]._pidOutput);
-        // Serial.print(F(" positions:"));
-        // Serial.print(positions[M_SCAN]);
-
-        // Serial.println();
-        // motors[m].brake();
     }
 #ifdef DEBUG
 
@@ -159,8 +148,6 @@ void moveRel(int m, int power, int16_t degree, bool wait = true)
     if (wait)
     {
         waitForArrival(m);
-        // waitForArrival(m, positions[m]);
-        // motors[m].brake();
     }
 #ifdef DEBUG
     Serial.print(F(" :"));

@@ -4,10 +4,7 @@
 #include <BricktronicsMegashield.h>
 #include <BricktronicsMotor.h>
 #include <BricktronicsButton.h>
-// #include <LiquidCrystal.h>
 #include <LiquidCrystal_I2C.h>
-// #include <yahboom.h>
-// #include <gy33.h>
 #include <Adafruit_TCS34725.h>
 
 #include "btn.h"
@@ -16,8 +13,6 @@
 #include "solver.h"
 #include "validator.h"
 
-// Yahboom colorSensor = Yahboom();
-// GY33 colorSensor = GY33();
 Adafruit_TCS34725 colorSensor = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_2_4MS, TCS34725_GAIN_60X);
 
 CubeColors cubeColors = CubeColors();

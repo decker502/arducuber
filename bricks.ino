@@ -6,7 +6,6 @@
 #include "banner.h"
 #include "tilt.h"
 #include "scan.h"
-#include "led.h"
 #include "color.h"
 #include "mcmoves.h"
 #include "fakedata.h"
@@ -16,19 +15,7 @@ void setup()
   // Be sure to set your serial console to 115200 baud
   Serial.begin(115200);
 
-  // if (colorSensor.begin())
-  // {
-  //   Serial.println("Found color sensor");
-  // }
-  // else
-  // {
-  //   Serial.println("No GY-33 found ... check your connections");
-  //   while (1)
-  //     ;
-  // }
   lcd.init(); // initialize the lcd
-  // lcd.begin(16, 2);
-  // led.begin();
 
   if (colorSensor.begin())
   {
@@ -41,9 +28,6 @@ void setup()
       ; // halt!
   }
 
-  // btns[BTNCENTER].begin();
-  // btns[BTNLEFT].begin();
-  // btns[BTNRIGHT].begin();
   btn.begin();
 
   // Initialize the motor connections
@@ -68,7 +52,6 @@ ISR(TIMER0_COMPA_vect)
 
   if (++count_ms == 50)
   {
-    // motors[M_TURN].update();
     if (abs(positions[M_TURN] - motors[M_TURN].getPosition()) < 5)
     {
       stableFactor[M_TURN]++;
@@ -123,11 +106,6 @@ ISR(TIMER0_COMPA_vect)
 
 void initialize()
 {
-  // color.setLevel(8);
-  // lcd.scrollDisplayLeft();
-  // lcd.clear();
-  // led.off();
-
   motors[M_TURN].coast();
   motors[M_TILT].coast();
   motors[M_SCAN].coast();
@@ -142,9 +120,6 @@ void initialize()
   motors[M_TURN]._pid.SetOutputLimits(-MAX_M_POWER, MAX_M_POWER);
   motors[M_TILT]._pid.SetOutputLimits(-MAX_M_POWER, MAX_M_POWER);
   motors[M_SCAN]._pid.SetOutputLimits(-MAX_M_POWER, MAX_M_POWER);
-
-  turnTablePosition = 0;
-  turnTableOffset = 24;
 
   bool scanOK = true;
 
@@ -187,12 +162,6 @@ bool CubeSense()
 {
   float cm = sensorDist.get();
 
-  // #ifdef DEBUG
-  //   Serial.print(F(" CubeSense dist:"));
-  //   Serial.println(cm);
-
-  // #endif
-
   return cm > 0 && cm < 16;
 }
 
@@ -201,10 +170,6 @@ void CubeInsert()
   int count = 0;
   while (count < 150)
   {
-    // #ifdef DEBUG
-    //     Serial.print(F(" CubeInsert count:"));
-    //     Serial.println(count);
-    // #endif
     count++;
     if (!CubeSense())
     {
@@ -213,12 +178,10 @@ void CubeInsert()
     if (btn.isPressed(BTN_LEFT))
     {
       moveRel(M_TURN, 75, 2 * ratio[M_TURN], true);
-      turnTablePosition += 2 * ratio[M_TURN];
     }
     if (btn.isPressed(BTN_RIGHT))
     {
       moveRel(M_TURN, 75, -2 * ratio[M_TURN], true);
-      turnTablePosition -= 2 * ratio[M_TURN];
     }
     delay(10);
   }
@@ -249,7 +212,6 @@ bool Solve(byte *cube)
     move = 0;
 
     ScanCube();
-    // testColors();
 
     lcd.clear();
     lcd.setCursor(1, 0);
@@ -258,7 +220,6 @@ bool Solve(byte *cube)
 
     int t = -1;
     // spike 版本增加到12
-    //  for (int i = 0; i < 6; i++)
     for (int i = 0; i < 12; i++)
     {
       lcd.clear();
@@ -274,7 +235,6 @@ bool Solve(byte *cube)
 
       Serial.println("valid_pieces...");
       bool is_valid = validator.valid_pieces(cube);
-      // bool is_valid = valid_pieces(cube);
 
       if (is_valid)
       {
@@ -349,12 +309,10 @@ bool Solve(byte *cube)
       Serial.print(F("Cube "));
       Serial.println(pieces_valid);
       delay(1000);
-      // flash_blue();
     }
     else
     {
       Serial.println(pieces_valid);
-      // flash_red();
     }
   }
 
@@ -386,13 +344,14 @@ void calibrate_white()
   lcd.clear();
   lcd.setCursor(0, 1);
   lcd.print("Cal White suc");
-
+#ifdef DEBUG
   Serial.print(F("Calibrate white successful R: "));
   Serial.print(white_rgb[0]);
   Serial.print(F(" G: "));
   Serial.print(white_rgb[1]);
   Serial.print(F(" B: "));
   Serial.println(white_rgb[2]);
+#endif
   writeWhiteRGB();
 }
 
@@ -425,11 +384,6 @@ void loop()
   TiltCal();
   delay(500);
 
-  // moveAbs(M_SCAN, 100, T_SCNT, true);
-  // moveAbs(M_SCAN, 100, T_SCNR, true);
-  // moveAbs(M_SCAN, 100, T_SEDG, true);
-  // ScanCube();
-
   bool cal_white = false;
 
   while (true)
@@ -457,8 +411,6 @@ void loop()
     lcd.print("Insert cube...");
 
     Serial.println("CubeInsert:");
-    // Tilt(1);
-    // delay(500);
     CubeInsert();
 
     lcd.clear();

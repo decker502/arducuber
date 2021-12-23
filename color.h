@@ -1,9 +1,10 @@
 #ifndef CUBE_COLOR_H
 #define CUBE_COLOR_H
 
+#include "global.h"
+
 const int cmax = 1024L;
 
-#define NFACE 6
 #define CLR_R 0
 #define CLR_B 1
 #define CLR_O 2

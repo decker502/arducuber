@@ -37,15 +37,8 @@ void Tilt(int n = 1)
     {
         // 使用原参数时，底座横轴与主横梁平行时，底座会发生倾斜式跳动，导致魔方会翻转过头
         // 参见 readme 中 转盘的改造说明
-        // moveAbs(M_TILT, 100, tiltOffset + 195);
         moveAbs(M_TILT, 80, 160);
-        // moveRel(M_TILT, 75, -15);
-        // delay(5);
-        // moveAbs(M_TILT, 75, tiltOffset + 60);
         TiltHold();
-        // moveAbs(M_TILT, 60, tiltOffset + 85);
-        // delay(5);
-        // TiltHold();
     }
 }
 
