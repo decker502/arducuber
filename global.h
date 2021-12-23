@@ -1,7 +1,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-// #define DEBUG
+#define DEBUG
 
 //-----------------------------------------------------------------------------
 // Background task and routines to use color sensor as flashing light

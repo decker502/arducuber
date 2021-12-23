@@ -154,7 +154,7 @@ void loop()
 
         // motor._pid.SetOutputLimits(-speed, speed);
         // arrival = motor.goToPositionWaitForArrivalOrTimeout(400, 2000);
-        Serial.println(" goto");
+        Serial.println(F(" goto"));
         pos = 1440;
         motor.goToPosition(pos);
         delayUpdateMS(2000);

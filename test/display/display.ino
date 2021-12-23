@@ -24,22 +24,22 @@ void setup()
 
     if (tcs.begin())
     {
-        Serial.println("Found sensor");
+        Serial.println(F("Found sensor"));
     }
     else
     {
-        Serial.println("No TCS34725 found ... check your connections");
+        Serial.println(F("No TCS34725 found ... check your connections"));
         while (1)
             ; // halt!
     }
 
     // if (colorSensor.begin())
     // {
-    //     Serial.println("Found GY33");
+    //     Serial.println(F("Found GY33"));
     // }
     // else
     // {
-    //     Serial.println("No GY33 found ... check your connections");
+    //     Serial.println(F("No GY33 found ... check your connections"));
     //     while (1)
     //         ; // halt!
     // }

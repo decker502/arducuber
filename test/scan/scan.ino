@@ -10,11 +10,11 @@ void setup()
 
   // if (colorSensor.begin())
   // {
-  //   Serial.println("Found color sensor");
+  //   Serial.println(F("Found color sensor"));
   // }
   // else
   // {
-  //   Serial.println("No GY-33 found ... check your connections");
+  //   Serial.println(F("No GY-33 found ... check your connections"));
   //   while (1)
   //     ;
   // }

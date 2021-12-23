@@ -19,11 +19,11 @@ void setup()
 
   if (colorSensor.begin())
   {
-    Serial.println("Found sensor");
+    Serial.println(F("Found sensor"));
   }
   else
   {
-    Serial.println("No Color Sensor found ... check your connections");
+    Serial.println(F("No Color Sensor found ... check your connections"));
     while (1)
       ; // halt!
   }
@@ -216,7 +216,7 @@ bool Solve(byte *cube)
     lcd.clear();
     lcd.setCursor(1, 0);
     lcd.print("Processing...");
-    Serial.println("Processing...");
+    Serial.println(F("Processing..."));
 
     int t = -1;
     // spike 版本增加到12
@@ -226,21 +226,21 @@ bool Solve(byte *cube)
       lcd.setCursor(1, 0);
       lcd.print("Determine Clr...");
 
-      Serial.println("determine_colors...");
+      Serial.println(F("determine_colors..."));
       cubeColors.determine_colors(cube, i);
 
       lcd.clear();
       lcd.setCursor(1, 0);
       lcd.print("Check valid ...");
 
-      Serial.println("valid_pieces...");
+      Serial.println(F("valid_pieces..."));
       bool is_valid = validator.valid_pieces(cube);
 
       if (is_valid)
       {
         t = i;
         pieces_valid++;
-        Serial.println("is_valid");
+        Serial.println(F("is_valid"));
         cubeColors.print();
 
         // display_cube(cube);
@@ -271,7 +271,7 @@ bool Solve(byte *cube)
     lcd.setCursor(1, 0);
     lcd.print("Solving ...");
 
-    Serial.println(" Solving..");
+    Serial.println(F(" Solving.."));
 
     cubeSolver.uc = CUBE_LEFT;
     cubeSolver.fc = CUBE_DOWN;
@@ -400,7 +400,7 @@ void loop()
       lcd.setCursor(0, 1);
       lcd.print("Cal White...");
 
-      Serial.println("Calibrate white");
+      Serial.println(F("Calibrate white"));
 
       calibrate_white();
       continue;
@@ -410,7 +410,7 @@ void loop()
     lcd.setCursor(0, 1);
     lcd.print("Insert cube...");
 
-    Serial.println("CubeInsert:");
+    Serial.println(F("CubeInsert:"));
     CubeInsert();
 
     lcd.clear();
@@ -423,7 +423,7 @@ void loop()
     lcd.setCursor(0, 1);
     lcd.print("Remove cube...");
 
-    Serial.println("CubeRemove:");
+    Serial.println(F("CubeRemove:"));
     CubeRemove();
   }
 }

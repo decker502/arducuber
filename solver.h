@@ -520,7 +520,7 @@ public:
 
     bool solve_nomap(byte *cube)
     {
-        Serial.println("solve_nomap:");
+        Serial.println(F("solve_nomap:"));
 
         solve_n = 0;
         copy_cube(solve_cube, cube);
@@ -528,7 +528,7 @@ public:
 
         if (!solved(solve_cube))
         {
-            Serial.println("false");
+            Serial.println(F("false"));
             return false;
         }
 
