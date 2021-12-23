@@ -1,12 +1,12 @@
 #ifndef VALIDATOR_H
 #define VALIDATOR_H
 
-#define U 0
-#define F 1
-#define D 2
-#define B 3
-#define R 4
-#define L 5
+#define CUBE_UP 0
+#define CUBE_FRONT 1
+#define CUBE_DOWN 2
+#define CUBE_BACK 3
+#define CUBE_RIGHT 4
+#define CUBE_LEFT 5
 
 #define POS(FF, OO) (((FF)*8) + (OO))
 
@@ -50,57 +50,57 @@ public:
     Validator() {}
     bool valid_pieces(uint8_t *cube)
     {
-        return (find_edge(cube, U, F) >= 0) &&
-               (find_edge(cube, U, L) >= 0) &&
-               (find_edge(cube, U, B) >= 0) &&
-               (find_edge(cube, U, R) >= 0) &&
-               (find_edge(cube, F, L) >= 0) &&
-               (find_edge(cube, L, B) >= 0) &&
-               (find_edge(cube, B, R) >= 0) &&
-               (find_edge(cube, R, F) >= 0) &&
-               (find_edge(cube, D, F) >= 0) &&
-               (find_edge(cube, D, L) >= 0) &&
-               (find_edge(cube, D, B) >= 0) &&
-               (find_edge(cube, D, R) >= 0) &&
-               (find_corner(cube, U, F, L) >= 0) &&
-               (find_corner(cube, U, L, B) >= 0) &&
-               (find_corner(cube, U, B, R) >= 0) &&
-               (find_corner(cube, U, R, F) >= 0) &&
-               (find_corner(cube, D, F, R) >= 0) &&
-               (find_corner(cube, D, R, B) >= 0) &&
-               (find_corner(cube, D, B, L) >= 0) &&
-               (find_corner(cube, D, L, F) >= 0);
+        return (find_edge(cube, CUBE_UP, CUBE_FRONT) >= 0) &&
+               (find_edge(cube, CUBE_UP, CUBE_LEFT) >= 0) &&
+               (find_edge(cube, CUBE_UP, CUBE_BACK) >= 0) &&
+               (find_edge(cube, CUBE_UP, CUBE_RIGHT) >= 0) &&
+               (find_edge(cube, CUBE_FRONT, CUBE_LEFT) >= 0) &&
+               (find_edge(cube, CUBE_LEFT, CUBE_BACK) >= 0) &&
+               (find_edge(cube, CUBE_BACK, CUBE_RIGHT) >= 0) &&
+               (find_edge(cube, CUBE_RIGHT, CUBE_FRONT) >= 0) &&
+               (find_edge(cube, CUBE_DOWN, CUBE_FRONT) >= 0) &&
+               (find_edge(cube, CUBE_DOWN, CUBE_LEFT) >= 0) &&
+               (find_edge(cube, CUBE_DOWN, CUBE_BACK) >= 0) &&
+               (find_edge(cube, CUBE_DOWN, CUBE_RIGHT) >= 0) &&
+               (find_corner(cube, CUBE_UP, CUBE_FRONT, CUBE_LEFT) >= 0) &&
+               (find_corner(cube, CUBE_UP, CUBE_LEFT, CUBE_BACK) >= 0) &&
+               (find_corner(cube, CUBE_UP, CUBE_BACK, CUBE_RIGHT) >= 0) &&
+               (find_corner(cube, CUBE_UP, CUBE_RIGHT, CUBE_FRONT) >= 0) &&
+               (find_corner(cube, CUBE_DOWN, CUBE_FRONT, CUBE_RIGHT) >= 0) &&
+               (find_corner(cube, CUBE_DOWN, CUBE_RIGHT, CUBE_BACK) >= 0) &&
+               (find_corner(cube, CUBE_DOWN, CUBE_BACK, CUBE_LEFT) >= 0) &&
+               (find_corner(cube, CUBE_DOWN, CUBE_LEFT, CUBE_FRONT) >= 0);
     }
 
     int find_edge(uint8_t *cube, uint8_t f0, uint8_t f1)
     {
         uint8_t e0;
-        FIND_EDGE(U, 1, B, 5, 0, 1);
-        FIND_EDGE(U, 7, L, 1, 2, 3);
-        FIND_EDGE(U, 5, F, 1, 4, 5);
-        FIND_EDGE(U, 3, R, 1, 6, 7);
-        FIND_EDGE(L, 3, F, 7, 8, 9);
-        FIND_EDGE(B, 7, L, 7, 10, 11);
-        FIND_EDGE(D, 7, L, 5, 12, 13);
-        FIND_EDGE(R, 3, B, 3, 14, 15);
-        FIND_EDGE(D, 5, B, 1, 16, 17);
-        FIND_EDGE(F, 3, R, 7, 18, 19);
-        FIND_EDGE(D, 3, R, 5, 20, 21);
-        FIND_EDGE(D, 1, F, 5, 22, 23);
+        FIND_EDGE(CUBE_UP, 1, CUBE_BACK, 5, 0, 1);
+        FIND_EDGE(CUBE_UP, 7, CUBE_LEFT, 1, 2, 3);
+        FIND_EDGE(CUBE_UP, 5, CUBE_FRONT, 1, 4, 5);
+        FIND_EDGE(CUBE_UP, 3, CUBE_RIGHT, 1, 6, 7);
+        FIND_EDGE(CUBE_LEFT, 3, CUBE_FRONT, 7, 8, 9);
+        FIND_EDGE(CUBE_BACK, 7, CUBE_LEFT, 7, 10, 11);
+        FIND_EDGE(CUBE_DOWN, 7, CUBE_LEFT, 5, 12, 13);
+        FIND_EDGE(CUBE_RIGHT, 3, CUBE_BACK, 3, 14, 15);
+        FIND_EDGE(CUBE_DOWN, 5, CUBE_BACK, 1, 16, 17);
+        FIND_EDGE(CUBE_FRONT, 3, CUBE_RIGHT, 7, 18, 19);
+        FIND_EDGE(CUBE_DOWN, 3, CUBE_RIGHT, 5, 20, 21);
+        FIND_EDGE(CUBE_DOWN, 1, CUBE_FRONT, 5, 22, 23);
         return -1;
     }
 
     int find_corner(uint8_t *cube, uint8_t f0, uint8_t f1, uint8_t f2)
     {
         uint8_t c0;
-        FIND_CORNER(U, 2, B, 4, R, 2, 0, 1, 2);
-        FIND_CORNER(U, 0, L, 0, B, 6, 3, 4, 5);
-        FIND_CORNER(U, 6, F, 0, L, 2, 6, 7, 8);
-        FIND_CORNER(U, 4, R, 0, F, 2, 9, 10, 11);
-        FIND_CORNER(D, 0, L, 4, F, 6, 12, 13, 14);
-        FIND_CORNER(D, 6, B, 0, L, 6, 15, 16, 17);
-        FIND_CORNER(D, 4, R, 4, B, 2, 18, 19, 20);
-        FIND_CORNER(D, 2, F, 4, R, 6, 21, 22, 23);
+        FIND_CORNER(CUBE_UP, 2, CUBE_BACK, 4, CUBE_RIGHT, 2, 0, 1, 2);
+        FIND_CORNER(CUBE_UP, 0, CUBE_LEFT, 0, CUBE_BACK, 6, 3, 4, 5);
+        FIND_CORNER(CUBE_UP, 6, CUBE_FRONT, 0, CUBE_LEFT, 2, 6, 7, 8);
+        FIND_CORNER(CUBE_UP, 4, CUBE_RIGHT, 0, CUBE_FRONT, 2, 9, 10, 11);
+        FIND_CORNER(CUBE_DOWN, 0, CUBE_LEFT, 4, CUBE_FRONT, 6, 12, 13, 14);
+        FIND_CORNER(CUBE_DOWN, 6, CUBE_BACK, 0, CUBE_LEFT, 6, 15, 16, 17);
+        FIND_CORNER(CUBE_DOWN, 4, CUBE_RIGHT, 4, CUBE_BACK, 2, 18, 19, 20);
+        FIND_CORNER(CUBE_DOWN, 2, CUBE_FRONT, 4, CUBE_RIGHT, 6, 21, 22, 23);
         return -1;
     }
 };

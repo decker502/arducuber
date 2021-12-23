@@ -26,11 +26,11 @@ public:
   {
 #ifdef DEBUG
     Serial.println();
-    Serial.print("Led on; r:");
+    Serial.print(F("Led on; r:"));
     Serial.print(r);
-    Serial.print(" g:");
+    Serial.print(F(" g:"));
     Serial.print(g);
-    Serial.print(" b:");
+    Serial.print(F(" b:"));
     Serial.println(b);
 #endif
 

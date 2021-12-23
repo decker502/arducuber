@@ -26,10 +26,10 @@
     0, 128, 0   \
   }
 
-// R(Right)、L(Left)、U(Up)、D(Down)、F(Front)、B(Back)
+// R(Right)、L(Left)、U(Up)、CUBE_DOWN(Down)、F(Front)、B(Back)
 //  #define U 0
 //  #define F 1
-//  #define D 2
+//  #define CUBE_DOWN 2
 //  #define B 3
 //  #define R 4
 //  #define L 5
@@ -45,7 +45,7 @@
 // 扫描顺序对应于数组下标
 // 6: 8 6 7 0 1 2 3 4 5
 // 2: 8 2 3 4 5 6 7 0 1
-//构造测试数据， 对应于魔方摆放位置 U - W,  F - R, D - Y , B - O, R - B , L - G，
+//构造测试数据， 对应于魔方摆放位置 U - W,  F - CUBE_RIGHT, CUBE_DOWN - Y , B - O, R - B , L - G，
 
 // uint8_t fake_rgb[][3] = {
 //     F_RGB_O, F_RGB_O, F_RGB_O,
@@ -196,7 +196,7 @@ uint8_t fake_rgb[][3] = {
 };
 
 // 扫描完后的色块排列
-// U D L R F B 代表上下左右前后
+// U CUBE_DOWN L R F B 代表上下左右前后
 
 // nxt
 //

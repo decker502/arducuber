@@ -4,36 +4,31 @@
 #include <BricktronicsMegashield.h>
 #include <BricktronicsMotor.h>
 #include <BricktronicsButton.h>
-#include <LiquidCrystal.h>
+// #include <LiquidCrystal.h>
+#include <LiquidCrystal_I2C.h>
 // #include <yahboom.h>
-#include <gy33.h>
+// #include <gy33.h>
+#include <Adafruit_TCS34725.h>
 
-#include "led.h"
+#include "btn.h"
 #include "color.h"
 #include "dist.h"
 #include "solver.h"
 #include "validator.h"
-#include "solvercompo.h"
-#include "rotator.h"
 
-Led led = Led();
 // Yahboom colorSensor = Yahboom();
-GY33 colorSensor = GY33();
+// GY33 colorSensor = GY33();
+Adafruit_TCS34725 colorSensor = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_2_4MS, TCS34725_GAIN_60X);
 
 CubeColors cubeColors = CubeColors();
 Validator validator = Validator();
 CubeSolver cubeSolver = CubeSolver();
-CubeSolverCompo solverCompo = CubeSolverCompo();
+
 SensorDist sensorDist = SensorDist();
-Rotator rotator = Rotator();
+Button btn = Button(BricktronicsMegashield::SENSOR_2);
 
-const int rs = 49, en = 48, d4 = 47, d5 = 46, d6 = 45, d7 = 44;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
-
-// Select the desired motor port (MOTOR_1 through MOTOR_6) in the constructor below.
-// BricktronicsMotor motor_base(BricktronicsMegashield::MOTOR_1);
-// BricktronicsMotor motor_arm(BricktronicsMegashield::MOTOR_2);
-
-
+// const int rs = 49, en = 48, d4 = 47, d5 = 46, d6 = 45, d7 = 44;
+// LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 
 #endif

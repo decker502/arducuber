@@ -6,7 +6,6 @@
 #include "banner.h"
 #include "tilt.h"
 #include "scan.h"
-#include "btn.h"
 #include "led.h"
 #include "color.h"
 #include "mcmoves.h"
@@ -27,12 +26,25 @@ void setup()
   //   while (1)
   //     ;
   // }
+  lcd.init(); // initialize the lcd
   // lcd.begin(16, 2);
   // led.begin();
 
-  btns[BTNCENTER].begin();
-  btns[BTNLEFT].begin();
-  btns[BTNRIGHT].begin();
+  if (colorSensor.begin())
+  {
+    Serial.println("Found sensor");
+  }
+  else
+  {
+    Serial.println("No Color Sensor found ... check your connections");
+    while (1)
+      ; // halt!
+  }
+
+  // btns[BTNCENTER].begin();
+  // btns[BTNLEFT].begin();
+  // btns[BTNRIGHT].begin();
+  btn.begin();
 
   // Initialize the motor connections
   motors[M_TURN].begin();
@@ -52,37 +64,55 @@ void setup()
 ISR(TIMER0_COMPA_vect)
 {
   static unsigned char count_ms = 0;
-  static int stableFactor = 0;
+  static int stableFactor[3] = {0, 0, 0};
 
   if (++count_ms == 50)
   {
-    motors[M_TURN].update();
-    // if (!motors[M_TURN].settledAtPosition(positions[M_TURN]))
-    //   motors[M_TURN].update();
-    // else
-    // {
-    //   motors[M_TURN].brake();
-    // }
-    motors[M_TILT].update();
-    // if (!motors[M_TILT].settledAtPosition(positions[M_TILT]))
-    //   motors[M_TILT].update();
-    // else
-    // {
-    //   motors[M_TILT].brake();
-    // }
-
-    if (abs(positions[M_SCAN] - motors[M_SCAN].getPosition()) < 5)
+    // motors[M_TURN].update();
+    if (abs(positions[M_TURN] - motors[M_TURN].getPosition()) < 5)
     {
-      stableFactor++;
-      if (stableFactor > 5)
-        stableFactor = 5;
+      stableFactor[M_TURN]++;
+      if (stableFactor[M_TURN] > 5)
+        stableFactor[M_TURN] = 5;
     }
     else
     {
-      stableFactor = 0;
+      stableFactor[M_TURN] = 0;
     }
 
-    if (stableFactor < 5)
+    if (stableFactor[M_TURN] < 5)
+    {
+      motors[M_TURN].update();
+    }
+
+    if (abs(positions[M_TILT] - motors[M_TILT].getPosition()) < 5)
+    {
+      stableFactor[M_TILT]++;
+      if (stableFactor[M_TILT] > 5)
+        stableFactor[M_TILT] = 5;
+    }
+    else
+    {
+      stableFactor[M_TILT] = 0;
+    }
+
+    if (stableFactor[M_TILT] < 5)
+    {
+      motors[M_TILT].update();
+    }
+
+    if (abs(positions[M_SCAN] - motors[M_SCAN].getPosition()) < 5)
+    {
+      stableFactor[M_SCAN]++;
+      if (stableFactor[M_SCAN] > 5)
+        stableFactor[M_SCAN] = 5;
+    }
+    else
+    {
+      stableFactor[M_SCAN] = 0;
+    }
+
+    if (stableFactor[M_SCAN] < 5)
     {
       motors[M_SCAN].update();
     }
@@ -117,6 +147,8 @@ void initialize()
   turnTableOffset = 24;
 
   bool scanOK = true;
+
+  readWhiteRGB();
 }
 
 void init_cube(byte *cube)
@@ -127,12 +159,36 @@ void init_cube(byte *cube)
       cube[o++] = f;
 }
 
+void readWhiteRGB()
+{
+  // Read the white calibration value from EEPROM
+  byte id = EEPROM.read(EEPROM_ID_ADDR);
+  if (id == EEPROM_ID)
+  {
+    for (int i = 0; i < 3; i++)
+    {
+      white_rgb[i] = EEPROM.read(EEPROM_DATA_ADDR + i + 1);
+    }
+  }
+}
+
+void writeWhiteRGB()
+{
+  // Read the white calibration value from EEPROM
+  EEPROM.write(EEPROM_ID_ADDR, EEPROM_ID);
+
+  for (int i = 0; i < 3; i++)
+  {
+    EEPROM.write(EEPROM_DATA_ADDR + i + 1, white_rgb[i]);
+  }
+}
+
 bool CubeSense()
 {
   float cm = sensorDist.get();
 
   // #ifdef DEBUG
-  //   Serial.print(" CubeSense dist:");
+  //   Serial.print(F(" CubeSense dist:"));
   //   Serial.println(cm);
 
   // #endif
@@ -146,22 +202,25 @@ void CubeInsert()
   while (count < 150)
   {
     // #ifdef DEBUG
-    //     Serial.print(" CubeInsert count:");
+    //     Serial.print(F(" CubeInsert count:"));
     //     Serial.println(count);
     // #endif
     count++;
     if (!CubeSense())
+    {
       count = 0;
-    if (leftPressed())
+    }
+    if (btn.isPressed(BTN_LEFT))
     {
       moveRel(M_TURN, 75, 2 * ratio[M_TURN], true);
       turnTablePosition += 2 * ratio[M_TURN];
     }
-    if (rightPressed())
+    if (btn.isPressed(BTN_RIGHT))
     {
       moveRel(M_TURN, 75, -2 * ratio[M_TURN], true);
       turnTablePosition -= 2 * ratio[M_TURN];
     }
+    delay(10);
   }
 }
 
@@ -173,6 +232,7 @@ void CubeRemove()
     count++;
     if (CubeSense())
       count = 0;
+    delay(10);
   }
 }
 
@@ -201,13 +261,16 @@ bool Solve(byte *cube)
     //  for (int i = 0; i < 6; i++)
     for (int i = 0; i < 12; i++)
     {
+      lcd.clear();
+      lcd.setCursor(1, 0);
+      lcd.print("Determine Clr...");
+
       Serial.println("determine_colors...");
       cubeColors.determine_colors(cube, i);
 
-      solverCompo.calcInput(cube);
-
-      Serial.print("Input:");
-      Serial.println(solverCompo.solverInput);
+      lcd.clear();
+      lcd.setCursor(1, 0);
+      lcd.print("Check valid ...");
 
       Serial.println("valid_pieces...");
       bool is_valid = validator.valid_pieces(cube);
@@ -226,22 +289,10 @@ bool Solve(byte *cube)
           solved = true;
           break;
         }
-        // solverCompo.solve();
-
-        // Serial.print("result:");
-        // for(int i = 0; i< solverCompo.resultAmount; i++) {
-        //   Serial.print(solverCompo.resultFaces[i]);
-        //   Serial.print(solverCompo.resultActions[i]);
-
-        // }
-        // Serial.println();
-        // solved = true;
-
-        // break;
       }
       else
       {
-        Serial.print(" not valid: ");
+        Serial.print(F(" not valid: "));
         Serial.println(i);
         cubeColors.print();
       }
@@ -255,12 +306,15 @@ bool Solve(byte *cube)
   if (solved)
   {
     ScanAway();
+
+    lcd.clear();
+    lcd.setCursor(1, 0);
+    lcd.print("Solving ...");
+
     Serial.println(" Solving..");
 
-    // rotator.rotate(solverCompo.resultFaces, solverCompo.resultActions, solverCompo.resultAmount);
-
-    cubeSolver.uc = L;
-    cubeSolver.fc = D;
+    cubeSolver.uc = CUBE_LEFT;
+    cubeSolver.fc = CUBE_DOWN;
 
     for (int i = 0; i < cubeSolver.solve_n; i++)
     {
@@ -274,13 +328,10 @@ bool Solve(byte *cube)
           rn = cubeSolver.solve_rot[j];
       }
 
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("Solving...");
       lcd.setCursor(0, 1);
-      lcd.print("Move of ");
+      lcd.print("Move ");
       lcd.print(i + 1);
-      lcd.print(" solve_n: ");
+      lcd.print(" of ");
       lcd.print(cubeSolver.solve_n);
 
       cubeSolver.manipulate(cube, fi, ri, rn);
@@ -289,13 +340,13 @@ bool Solve(byte *cube)
   else
   {
 
-    Serial.print("Scan error...");
+    Serial.print(F("Scan error..."));
     delay(500);
 
     cubeColors.print();
     if (pieces_valid > 1)
     {
-      Serial.print("Cube ");
+      Serial.print(F("Cube "));
       Serial.println(pieces_valid);
       delay(1000);
       // flash_blue();
@@ -313,12 +364,45 @@ bool Solve(byte *cube)
   return solved;
 }
 
+void calibrate_white()
+{
+  moveAbs(M_SCAN, 100, T_SCNT, false);
+  waitForArrival(M_SCAN);
+  delay(100);
+
+  float red, green, blue;
+
+  while (true)
+  {
+    delay((256 - TCS34725_INTEGRATIONTIME_101MS) * 12 / 5 + 1);
+    colorSensor.getRGB(&red, &green, &blue);
+    white_rgb[0] = uint8_t(red);
+    white_rgb[1] = uint8_t(green);
+    white_rgb[2] = uint8_t(blue);
+
+    if (red > 250 || green > 250 || blue > 250)
+      break;
+  }
+  lcd.clear();
+  lcd.setCursor(0, 1);
+  lcd.print("Cal White suc");
+
+  Serial.print(F("Calibrate white successful R: "));
+  Serial.print(white_rgb[0]);
+  Serial.print(F(" G: "));
+  Serial.print(white_rgb[1]);
+  Serial.print(F(" B: "));
+  Serial.println(white_rgb[2]);
+  writeWhiteRGB();
+}
+
 void loop()
 {
-  while (!leftPressed())
-    ;
+  while (!btn.isPressed(BTN_CONFIRM))
+  {
+    delay(10);
+  }
 
-  led.on(0, 0, 40);
   byte cube[NFACE * 8];
   initialize();
 
@@ -327,24 +411,54 @@ void loop()
   init_cube(cube);
 
   lcd.clear();
+  lcd.backlight();
   lcd.setCursor(0, 1);
   lcd.print("Reset scan...");
 
   ScanCal();
+  delay(500);
 
   lcd.clear();
   lcd.setCursor(0, 1);
   lcd.print("Reset tilt...");
 
   TiltCal();
+  delay(500);
+
+  // moveAbs(M_SCAN, 100, T_SCNT, true);
+  // moveAbs(M_SCAN, 100, T_SCNR, true);
+  // moveAbs(M_SCAN, 100, T_SEDG, true);
+  // ScanCube();
+
+  bool cal_white = false;
 
   while (true)
   {
+    ScanAway();
+    TiltAway();
+    delay(500);
+
+    if (!cal_white && btn.isPressed(BTN_UP))
+    {
+      cal_white = true;
+
+      lcd.clear();
+      lcd.setCursor(0, 1);
+      lcd.print("Cal White...");
+
+      Serial.println("Calibrate white");
+
+      calibrate_white();
+      continue;
+    }
+
     lcd.clear();
     lcd.setCursor(0, 1);
-    lcd.print("Remove cube...");
-    Serial.println("CubeInsert:");
+    lcd.print("Insert cube...");
 
+    Serial.println("CubeInsert:");
+    // Tilt(1);
+    // delay(500);
     CubeInsert();
 
     lcd.clear();
@@ -352,6 +466,11 @@ void loop()
     lcd.print("Scanning...");
 
     Solve(cube);
+
+    lcd.clear();
+    lcd.setCursor(0, 1);
+    lcd.print("Remove cube...");
+
     Serial.println("CubeRemove:");
     CubeRemove();
   }

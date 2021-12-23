@@ -23,19 +23,6 @@ public:
   //
   void setRGB(uint8_t red, uint8_t green, uint8_t blue)
   {
-    // #ifdef DEBUG
-    //     Serial.println();
-    //     Serial.print("setRGB; red:");
-    //     Serial.print(red);
-    //     Serial.print(" green:");
-    //     Serial.print(green);
-    //     Serial.print(" blue:");
-    //     Serial.print(blue);
-    //     Serial.print(" HEX: #");
-    //     Serial.print(red, HEX);
-    //     Serial.print(green, HEX);
-    //     Serial.print(blue, HEX);
-    // #endif
 
     h = 0;
     s = 0;
@@ -55,16 +42,6 @@ public:
 
     long vf = v + m;
     l = long(vf / 2);
-    // #ifdef DEBUG
-    //     Serial.print(" v:");
-    //     Serial.print(v);
-    //     Serial.print(" m:");
-    //     Serial.print(m);
-    //     Serial.print(" vf:");
-    //     Serial.print(vf);
-    //     Serial.print(" l:");
-    //     Serial.print(l);
-    // #endif
 
     if (l > 0)
     {
@@ -98,7 +75,7 @@ public:
 
       // #ifdef DEBUG
 
-      //       Serial.print(" sl:");
+      //       Serial.print(F(" sl:"));
       //       Serial.println(sl);
 
       // #endif
@@ -276,37 +253,26 @@ public:
 
   void sort_colors(const int t, const int s)
   {
-    // 分离白色
-    if (t < 6)
-    {
-      // Lightness
-      sort_clrs(0, 6 * s, cmp_lr);
-      // Saturation
-      sort_clrs(0, 3 * s, cmp_sl);
-    }
-    else
-    {
-      // Saturation
-      sort_clrs(0, 6 * s, cmp_sl);
-    }
-    // Saturation 分离 下标为0 的白色
+    // 分离白色: Saturation 分离 下标为0 的白色
     sort_clrs(0, 6 * s, cmp_sl);
-    // Hue for BLue 除白色后排序， 下标5的为蓝色
-    sort_clrs(s, 5 * s, cmp_h);
 
-    // 按 (R O) (Y G) 排序
+    //分离 Blue: 按 hue排序，为排除　R,O干扰，只取后三组，即 Y G B ，再按 RB　排序，最后一组即为 Blue
+    sort_clrs(1 * s, 5 * s, cmp_h);
+    sort_clrs(3 * s, 3 * s, cmp_r_br);
+
+    // 分离 Yellow 和 Green: 按 RG 降序排序，　前二组为 (R O) , 后二组为排序的 Y G
     sort_clrs(1 * s, 4 * s, cmp_r_gr);
 
     // R O 排序
-    sort_clrs(1 * s, 2 * s, cmp_h);
+    sort_clrs(1 * s, 2 * s, cmp_b_gr);
 
-    // Red / Orange
+    // Red / Orange 以不同方式重试
     switch (t % 6)
     {
     case 0: /* already sorted by hue */
       break;
     case 1:
-      sort_clrs(1 * s, 2 * s, cmp_r_g);
+      sort_clrs(1 * s, 2 * s, cmp_h);
       break;
     case 2:
       sort_clrs(1 * s, 2 * s, cmp_b_g);
@@ -321,61 +287,57 @@ public:
       sort_clrs(1 * s, 2 * s, cmp_l);
       break;
     }
-    // #ifdef DEBUG
-    //     Serial.print(" t: ");
-    //     Serial.print(t);
-    //     Serial.print(" s: ");
-    //     Serial.print(s);
-    // #endif
+
     int i = 0;
     for (i = 0; i < s; i++)
     {
       clrs[clr_ord[i]].clr = CLR_W;
-      // #ifdef DEBUG
-      //       printClr(clrs[clr_ord[i]]);
-      //       Serial.print(" --- CLR_W ");
-      // #endif
+#ifdef DEBUG
+      printClr(clrs[clr_ord[i]]);
+      Serial.print(F(" CLR_W "));
+#endif
     }
 
     for (; i < 2 * s; i++)
     {
       clrs[clr_ord[i]].clr = CLR_R;
-      // #ifdef DEBUG
-      //       printClr(clrs[clr_ord[i]]);
-      //       Serial.print(" --- CLR_R ");
-      // #endif
+#ifdef DEBUG
+      printClr(clrs[clr_ord[i]]);
+      Serial.print(F(" CLR_R "));
+#endif
     }
     for (; i < 3 * s; i++)
     {
       clrs[clr_ord[i]].clr = CLR_O;
-      // #ifdef DEBUG
-      //       printClr(clrs[clr_ord[i]]);
-      //       Serial.print(" --- CLR_O ");
-      // #endif
+#ifdef DEBUG
+      printClr(clrs[clr_ord[i]]);
+      Serial.print(F(" CLR_O "));
+#endif
     }
     for (; i < 4 * s; i++)
     {
       clrs[clr_ord[i]].clr = CLR_Y;
-      // #ifdef DEBUG
-      //       printClr(clrs[clr_ord[i]]);
-      //       Serial.print(" --- CLR_Y ");
-      // #endif
+#ifdef DEBUG
+      printClr(clrs[clr_ord[i]]);
+      Serial.print(F(" CLR_Y "));
+#endif
     }
     for (; i < 5 * s; i++)
     {
       clrs[clr_ord[i]].clr = CLR_G;
-      // #ifdef DEBUG
-      //       printClr(clrs[clr_ord[i]]);
-      //       Serial.print(" --- CLR_G ");
-      // #endif
+#ifdef DEBUG
+      printClr(clrs[clr_ord[i]]);
+      Serial.print(F(" CLR_G "));
+#endif
     }
     for (; i < 6 * s; i++)
     {
       clrs[clr_ord[i]].clr = CLR_B;
-      // #ifdef DEBUG
-      //       printClr(clrs[clr_ord[i]]);
-      //       Serial.print(" --- CLR_B ");
-      // #endif
+#ifdef DEBUG
+      printClr(clrs[clr_ord[i]]);
+      Serial.print(F(" CLR_B "));
+      Serial.println();
+#endif
     }
   }
 
@@ -453,22 +415,6 @@ public:
   {
 
     Color clr = clrs[pos(face, piece)];
-    // #ifdef DEBUG
-    //     Serial.print("getClr; face:");
-    //     Serial.print(face);
-    //     Serial.print(" piece:");
-    //     Serial.print(piece);
-    //     Serial.print(" clr:");
-    //     Serial.print(8 * clr.h / cmax);
-    //     Serial.print(" clr.h:");
-    //     Serial.print(clr.h);
-    //     Serial.print(" clr.s:");
-    //     Serial.print(clr.s);
-    //     Serial.print(" clr.l:");
-    //     Serial.print(clr.l);
-    //     Serial.print(" clr.sl:");
-    //     Serial.println(clr.sl);
-    // #endif
 
     uint8_t c = 8; // white
     if (clr.sl > 50)
@@ -492,7 +438,7 @@ public:
       if (i % 9 == 0)
       {
         Serial.println();
-        Serial.print("face: ");
+        Serial.print(F("face: "));
         Serial.print(i / 9);
       }
       else
@@ -509,47 +455,47 @@ public:
   }
   void printClr(Color clr)
   {
-    Serial.print(" rgb(");
+    Serial.print(F(" rgb("));
     Serial.print(clr.r);
-    Serial.print(",");
+    Serial.print(F(","));
     Serial.print(clr.g);
-    Serial.print(",");
+    Serial.print(F(","));
     Serial.print(clr.b);
-    Serial.print(") ");
-    Serial.print(" h:");
+    Serial.print(F(") "));
+    Serial.print(F(" h:"));
     Serial.print(clr.h);
-    Serial.print(" s:");
+    Serial.print(F(" s:"));
     Serial.print(clr.s);
-    Serial.print(" l:");
+    Serial.print(F(" l:"));
     Serial.print(clr.l);
-    Serial.print(" sl:");
+    Serial.print(F(" sl:"));
     Serial.print(clr.sl);
-    Serial.print(" clr:");
+    Serial.print(F(" clr:"));
     Serial.print(clr.clr);
-    Serial.print(" clr_ratio rg:");
+    Serial.print(F(" clr_ratio rg:"));
     Serial.print(clr_ratio(clr.r, clr.g));
-    Serial.print(" clr_ratio bg:");
+    Serial.print(F(" clr_ratio bg:"));
     Serial.print(clr_ratio(clr.b, clr.g));
-    Serial.print(" clr_ratio rb:");
+    Serial.print(F(" clr_ratio rb:"));
     Serial.print(clr_ratio(clr.r, clr.b));
   }
   void print(int face)
   {
     Serial.println();
-    Serial.print("face: ");
+    Serial.print(F("face: "));
     Serial.print(face);
 
     for (int i = 0; i < 9; i++)
     {
 
       int p = pos(face, i);
-      Serial.print(" rgb(");
+      Serial.print(F(" rgb("));
       Serial.print(clrs[p].r);
-      Serial.print(",");
+      Serial.print(F(","));
       Serial.print(clrs[p].g);
-      Serial.print(",");
+      Serial.print(F(","));
       Serial.print(clrs[p].b);
-      Serial.print(") ");
+      Serial.print(F(") "));
     }
     Serial.println();
   }

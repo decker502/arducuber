@@ -35,7 +35,7 @@ ISR(TIMER0_COMPA_vect)
         // if (!motor.settledAtPosition(pos))
         // {
         motor.update();
-        Serial.print(" pos:");
+        Serial.print(F(" pos:"));
         Serial.println(motor._pidOutput);
         // }
         count_ms = 0;
@@ -59,9 +59,9 @@ bool waitForArrivalOrTimeout(int32_t position, uint32_t timeoutMS)
     while (!motor.settledAtPosition(position))
     {
         motor.update();
-        Serial.print(" index : ");
+        Serial.print(F(" index : "));
         Serial.print(i);
-        Serial.print(" pos:");
+        Serial.print(F(" pos:"));
         Serial.println(motor.getPosition());
     }
     // motor.hold();
@@ -117,11 +117,11 @@ void delayUpdateMS(uint32_t delayMS)
         if (changed)
         {
             motor._rawSetSpeed(motor._pidOutput);
-            Serial.print(" index : ");
+            Serial.print(F(" index : "));
             Serial.print(i++);
-            Serial.print(" _pidOutput:");
+            Serial.print(F(" _pidOutput:"));
             Serial.print(motor._pidOutput);
-            Serial.print(" pos:");
+            Serial.print(F(" pos:"));
             Serial.println(motor.getPosition());
         }
 

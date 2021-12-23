@@ -4,52 +4,10 @@
 #include "global.h"
 #include "motor.h"
 
-// void Spin45()
-// {
-
-//     turnTablePosition -= 45 * ratio[M_TURN];
-//     int32_t pos = getPosition(M_TURN);
-
-// #ifdef DEBUG
-//     Serial.print("Spin45 pos:");
-//     Serial.println(pos);
-//     Serial.print(" turnTablePosition:");
-//     Serial.println(turnTablePosition);
-//     Serial.print(" time:");
-//     Serial.println(millis() - start);
-//     Serial.println();
-// #endif
-
-//     if (pos < turnTablePosition)
-//     {
-//         Serial.print(" time:");
-//         Serial.println(millis() - start);
-
-        // scanOK = false;
-//         return;
-//     }
-
-//     // while (pos >= turnTablePosition - (-3 * ratio[M_TURN]))
-//     while (pos >= turnTablePosition)
-//     {
-//         delay(1);
-//         pos = getPosition(M_TURN);
-//     }
-// }
 
 void Spin45()
 {
-//     Serial.print("Spin45; turnTableOffset:");
-//     Serial.print(turnTableOffset);
-//     Serial.print(" turnTablePosition:");
-//     Serial.print(turnTablePosition);
-
-    // turnTablePosition -= 45 * ratio[M_TURN];
-    // moveAbs(M_TURN, 70, turnTablePosition + turnTableOffset);
     moveRel(M_TURN, 70, -45 * ratio[M_TURN]);
-
-//     Serial.println(" ");
-//     Serial.println(" ");
 }
 
 void Spin(int n)
@@ -60,8 +18,6 @@ void Spin(int n)
     {
         moveAbs(M_SCAN, 75, 15);
     };
-
-    // turnTablePosition -= n * (90 * ratio[M_TURN]);
 
     moveRel(M_TURN, 100, -n * (90 * ratio[M_TURN]));
 }

@@ -23,60 +23,60 @@
 #define MV_MAX   100  // maximum number of moves per solve
 
 
-const byte opposite[] = {D, B, U, F, L, R};
+const byte opposite[] = {CUBE_DOWN, CUBE_BACK, CUBE_UP, CUBE_FRONT, CUBE_LEFT, CUBE_RIGHT};
 
 #define MAP(UU, FF) (imap[((UU)*NFACE) + (FF)] * NFACE)
 
 const byte imap[] = {
-    /*       U   F   D   B   R   L
+    /*       U   F   CUBE_DOWN   B   R   L
   /* U */
     -1, 0, -1, 1, 2, 3,
     /* F */ 4, -1, 5, -1, 6, 7,
-    /* D */ -1, 8, -1, 9, 10, 11,
+    /* CUBE_DOWN */ -1, 8, -1, 9, 10, 11,
     /* B */ 12, -1, 13, -1, 14, 15,
     /* R */ 16, 17, 18, 19, -1, -1,
     /* L */ 20, 21, 22, 23, -1, -1};
 
 const byte fmap[] = {
     /* -- */
-    /* UF */ U, F, D, B, R, L,
+    /* UF */ CUBE_UP, CUBE_FRONT, CUBE_DOWN, CUBE_BACK, CUBE_RIGHT, CUBE_LEFT,
     /* -- */
-    /* UB */ U, B, D, F, L, R,
-    /* UR */ U, R, D, L, B, F,
-    /* UL */ U, L, D, R, F, B,
+    /* UB */ CUBE_UP, CUBE_BACK, CUBE_DOWN, CUBE_FRONT, CUBE_LEFT, CUBE_RIGHT,
+    /* UR */ CUBE_UP, CUBE_RIGHT, CUBE_DOWN, CUBE_LEFT, CUBE_BACK, CUBE_FRONT,
+    /* UL */ CUBE_UP, CUBE_LEFT, CUBE_DOWN, CUBE_RIGHT, CUBE_FRONT, CUBE_BACK,
 
-    /* FU */ F, U, B, D, L, R,
+    /* FU */ CUBE_FRONT, CUBE_UP, CUBE_BACK, CUBE_DOWN, CUBE_LEFT, CUBE_RIGHT,
     /* -- */
-    /* FD */ F, D, B, U, R, L,
+    /* FD */ CUBE_FRONT, CUBE_DOWN, CUBE_BACK, CUBE_UP, CUBE_RIGHT, CUBE_LEFT,
     /* -- */
-    /* FR */ F, R, B, L, U, D,
-    /* FL */ F, L, B, R, D, U,
+    /* FR */ CUBE_FRONT, CUBE_RIGHT, CUBE_BACK, CUBE_LEFT, CUBE_UP, CUBE_DOWN,
+    /* FL */ CUBE_FRONT, CUBE_LEFT, CUBE_BACK, CUBE_RIGHT, CUBE_DOWN, CUBE_UP,
 
     /* -- */
-    /* DF */ D, F, U, B, L, R,
+    /* DF */ CUBE_DOWN, CUBE_FRONT, CUBE_UP, CUBE_BACK, CUBE_LEFT, CUBE_RIGHT,
     /* -- */
-    /* DB */ D, B, U, F, R, L,
-    /* DR */ D, R, U, L, F, B,
-    /* DL */ D, L, U, R, B, F,
+    /* DB */ CUBE_DOWN, CUBE_BACK, CUBE_UP, CUBE_FRONT, CUBE_RIGHT, CUBE_LEFT,
+    /* DR */ CUBE_DOWN, CUBE_RIGHT, CUBE_UP, CUBE_LEFT, CUBE_FRONT, CUBE_BACK,
+    /* DL */ CUBE_DOWN, CUBE_LEFT, CUBE_UP, CUBE_RIGHT, CUBE_BACK, CUBE_FRONT,
 
-    /* BU */ B, U, F, D, R, L,
+    /* BU */ CUBE_BACK, CUBE_UP, CUBE_FRONT, CUBE_DOWN, CUBE_RIGHT, CUBE_LEFT,
     /* -- */
-    /* BD */ B, D, F, U, L, R,
+    /* BD */ CUBE_BACK, CUBE_DOWN, CUBE_FRONT, CUBE_UP, CUBE_LEFT, CUBE_RIGHT,
     /* -- */
-    /* BR */ B, R, F, L, D, U,
-    /* BL */ B, L, F, R, U, D,
+    /* BR */ CUBE_BACK, CUBE_RIGHT, CUBE_FRONT, CUBE_LEFT, CUBE_DOWN, CUBE_UP,
+    /* BL */ CUBE_BACK, CUBE_LEFT, CUBE_FRONT, CUBE_RIGHT, CUBE_UP, CUBE_DOWN,
 
-    /* RU */ R, U, L, D, F, B,
-    /* RF */ R, F, L, B, D, U,
-    /* RD */ R, D, L, U, B, F,
-    /* RB */ R, B, L, F, U, D,
+    /* RU */ CUBE_RIGHT, CUBE_UP, CUBE_LEFT, CUBE_DOWN, CUBE_FRONT, CUBE_BACK,
+    /* RF */ CUBE_RIGHT, CUBE_FRONT, CUBE_LEFT, CUBE_BACK, CUBE_DOWN, CUBE_UP,
+    /* RD */ CUBE_RIGHT, CUBE_DOWN, CUBE_LEFT, CUBE_UP, CUBE_BACK, CUBE_FRONT,
+    /* RB */ CUBE_RIGHT, CUBE_BACK, CUBE_LEFT, CUBE_FRONT, CUBE_UP, CUBE_DOWN,
     /* -- */
     /* -- */
 
-    /* LU */ L, U, R, D, B, F,
-    /* LF */ L, F, R, B, U, D,
-    /* LD */ L, D, R, U, F, B,
-    /* LB */ L, B, R, F, D, U
+    /* LU */ CUBE_LEFT, CUBE_UP, CUBE_RIGHT, CUBE_DOWN, CUBE_BACK, CUBE_FRONT,
+    /* LF */ CUBE_LEFT, CUBE_FRONT, CUBE_RIGHT, CUBE_BACK, CUBE_UP, CUBE_DOWN,
+    /* LD */ CUBE_LEFT, CUBE_DOWN, CUBE_RIGHT, CUBE_UP, CUBE_FRONT, CUBE_BACK,
+    /* LB */ CUBE_LEFT, CUBE_BACK, CUBE_RIGHT, CUBE_FRONT, CUBE_DOWN, CUBE_UP
     /* -- */
     /* -- */
 };
@@ -270,7 +270,7 @@ public:
             break;
 
         default:
-            Serial.print("error rot_edges:");
+            Serial.print(F("error rot_edges:"));
             Serial.println(r);
         }
     }
@@ -280,26 +280,26 @@ public:
         r &= 3;
         switch (f)
         {
-        case U:
-            rot_edges(cube, r, B, 4, R, 0, F, 0, L, 0);
+        case CUBE_UP:
+            rot_edges(cube, r, CUBE_BACK, 4, CUBE_RIGHT, 0, CUBE_FRONT, 0, CUBE_LEFT, 0);
             break;
-        case F:
-            rot_edges(cube, r, U, 4, R, 6, D, 0, L, 2);
+        case CUBE_FRONT:
+            rot_edges(cube, r, CUBE_UP, 4, CUBE_RIGHT, 6, CUBE_DOWN, 0, CUBE_LEFT, 2);
             break;
-        case D:
-            rot_edges(cube, r, F, 4, R, 4, B, 0, L, 4);
+        case CUBE_DOWN:
+            rot_edges(cube, r, CUBE_FRONT, 4, CUBE_RIGHT, 4, CUBE_BACK, 0, CUBE_LEFT, 4);
             break;
-        case B:
-            rot_edges(cube, r, D, 4, R, 2, U, 0, L, 6);
+        case CUBE_BACK:
+            rot_edges(cube, r, CUBE_DOWN, 4, CUBE_RIGHT, 2, CUBE_UP, 0, CUBE_LEFT, 6);
             break;
-        case R:
-            rot_edges(cube, r, U, 2, B, 2, D, 2, F, 2);
+        case CUBE_RIGHT:
+            rot_edges(cube, r, CUBE_UP, 2, CUBE_BACK, 2, CUBE_DOWN, 2, CUBE_FRONT, 2);
             break;
-        case L:
-            rot_edges(cube, r, U, 6, F, 6, D, 6, B, 6);
+        case CUBE_LEFT:
+            rot_edges(cube, r, CUBE_UP, 6, CUBE_FRONT, 6, CUBE_DOWN, 6, CUBE_BACK, 6);
             break;
         default:
-            Serial.print("error rot face:");
+            Serial.print(F("error rot face:"));
             Serial.println(f);
         }
         f *= 8;
@@ -348,7 +348,7 @@ public:
             break;
 
         default:
-            Serial.print("error rot:");
+            Serial.print(F("error rot:"));
             Serial.println(r);
         }
     }
@@ -462,48 +462,48 @@ public:
         idx_ie = 24;
 
         index_init();
-        index_edge(cube, D, F);
-        index_edge(cube, D, R);
+        index_edge(cube, CUBE_DOWN, CUBE_FRONT);
+        index_edge(cube, CUBE_DOWN, CUBE_RIGHT);
         solve_phase(cube, mtb0, mtd0, sizeof(mtd0) / sizeof(mtd0[0]));
 
         index_init();
-        index_corner(cube, D, F, R);
-        index_edge(cube, F, R);
+        index_corner(cube, CUBE_DOWN, CUBE_FRONT, CUBE_RIGHT);
+        index_edge(cube, CUBE_FRONT, CUBE_RIGHT);
         solve_phase(cube, mtb1, mtd1, sizeof(mtd1) / sizeof(mtd1[0]));
 
         index_init();
-        index_edge(cube, D, B);
+        index_edge(cube, CUBE_DOWN, CUBE_BACK);
         solve_phase(cube, mtb2, mtd2, sizeof(mtd2) / sizeof(mtd2[0]));
 
         index_init();
-        index_corner(cube, D, R, B);
-        index_edge(cube, R, B);
+        index_corner(cube, CUBE_DOWN, CUBE_RIGHT, CUBE_BACK);
+        index_edge(cube, CUBE_RIGHT, CUBE_BACK);
         solve_phase(cube, mtb3, mtd3, sizeof(mtd3) / sizeof(mtd3[0]));
 
         index_init();
-        index_edge(cube, D, L);
+        index_edge(cube, CUBE_DOWN, CUBE_LEFT);
         solve_phase(cube, mtb4, mtd4, sizeof(mtd4) / sizeof(mtd4[0]));
 
         index_init();
-        index_corner(cube, D, B, L);
-        index_edge(cube, B, L);
+        index_corner(cube, CUBE_DOWN, CUBE_BACK, CUBE_LEFT);
+        index_edge(cube, CUBE_BACK, CUBE_LEFT);
         solve_phase(cube, mtb5, mtd5, sizeof(mtd5) / sizeof(mtd5[0]));
 
         index_init();
-        index_corner(cube, D, L, F);
-        index_edge(cube, L, F);
+        index_corner(cube, CUBE_DOWN, CUBE_LEFT, CUBE_FRONT);
+        index_edge(cube, CUBE_LEFT, CUBE_FRONT);
         solve_phase(cube, mtb6, mtd6, sizeof(mtd6) / sizeof(mtd6[0]));
 
         index_init();
-        index_corner(cube, U, R, F);
-        index_corner(cube, U, F, L);
-        index_corner(cube, U, L, B);
+        index_corner(cube, CUBE_UP, CUBE_RIGHT, CUBE_FRONT);
+        index_corner(cube, CUBE_UP, CUBE_FRONT, CUBE_LEFT);
+        index_corner(cube, CUBE_UP, CUBE_LEFT, CUBE_BACK);
         solve_phase(cube, mtb7, mtd7, sizeof(mtd7) / sizeof(mtd7[0]));
 
         index_init();
-        index_edge(cube, U, R);
-        index_edge(cube, U, F);
-        index_edge(cube, U, L);
+        index_edge(cube, CUBE_UP, CUBE_RIGHT);
+        index_edge(cube, CUBE_UP, CUBE_FRONT);
+        index_edge(cube, CUBE_UP, CUBE_LEFT);
         index_last();
         solve_phase(cube, mtb8, mtd8, sizeof(mtd8) / sizeof(mtd8[0]), dorot);
     }
@@ -596,44 +596,44 @@ public:
     void manipulate(byte *cube, int f, int r, int rn)
     {
         int map = MAP(uc, fc);
-        if (fmap[map + U] == f)
+        if (fmap[map + CUBE_UP] == f)
         {
-            uc = fmap[map + D];
-            fc = fmap[map + B];
+            uc = fmap[map + CUBE_DOWN];
+            fc = fmap[map + CUBE_BACK];
             delay(50);
             Tilt(2);
         }
-        else if (fmap[map + F] == f)
+        else if (fmap[map + CUBE_FRONT] == f)
         {
-            uc = fmap[map + B];
-            fc = fmap[map + U];
+            uc = fmap[map + CUBE_BACK];
+            fc = fmap[map + CUBE_UP];
             delay(50);
             Tilt();
         }
-        else if (fmap[map + D] == f)
+        else if (fmap[map + CUBE_DOWN] == f)
         {
             TiltHold();
         }
-        else if (fmap[map + B] == f)
+        else if (fmap[map + CUBE_BACK] == f)
         {
-            uc = fmap[map + F];
-            fc = fmap[map + U];
+            uc = fmap[map + CUBE_FRONT];
+            fc = fmap[map + CUBE_UP];
             TiltAway();
             Spin(-2);
             Tilt();
         }
-        else if (fmap[map + R] == f)
+        else if (fmap[map + CUBE_RIGHT] == f)
         {
-            uc = fmap[map + L];
-            fc = fmap[map + U];
+            uc = fmap[map + CUBE_LEFT];
+            fc = fmap[map + CUBE_UP];
             TiltAway();
             Spin(-1);
             Tilt();
         }
         else
         { // fmap[map+L] == f
-            uc = fmap[map + R];
-            fc = fmap[map + U];
+            uc = fmap[map + CUBE_RIGHT];
+            fc = fmap[map + CUBE_UP];
             TiltAway();
             Spin(1);
             Tilt();
@@ -642,9 +642,9 @@ public:
         rotate(cube, f, r);
         // display_cube(cube);
 
-        Serial.print("manipulate; r:");
+        Serial.print(F("manipulate; r:"));
         Serial.print(r);
-        Serial.print(" rn:");
+        Serial.print(F(" rn:"));
         Serial.println(rn);
 
         Spin(r);
@@ -666,8 +666,8 @@ public:
     int idx_ne;
     int idx;
 
-    int uc = U;
-    int fc = F;
+    int uc = CUBE_UP;
+    int fc = CUBE_FRONT;
 
     byte pmap[NFACE];
 

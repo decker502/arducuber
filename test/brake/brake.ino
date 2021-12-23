@@ -91,11 +91,11 @@ bool waitForArrivalOrTimeout(int32_t position, uint32_t timeoutMS)
     int stableFactor = 0;
     while (stableFactor < 5)
     {
-        Serial.print("settledAtPosition :");
+        Serial.print(F("settledAtPosition :"));
         Serial.print(motor.settledAtPosition(position));
-        Serial.print(" pos:");
+        Serial.print(F(" pos:"));
         Serial.print(motor.getPosition());
-        Serial.print(" output:");
+        Serial.print(F(" output:"));
         Serial.print(motor._pidOutput);
         Serial.println();
 
@@ -136,7 +136,7 @@ void loop()
         bool arrival = waitForArrivalOrTimeout(pos, 2000);
         if (!arrival)
         {
-            Serial.print("fail");
+            Serial.print(F("fail"));
             Serial.println();
             continue;
         }
@@ -144,7 +144,7 @@ void loop()
         delay(2000);
 
         int speed = (50 + s * 5) * 255 / 100;
-        Serial.print("speed :");
+        Serial.print(F("speed :"));
         Serial.print(50 + s * 5);
         Serial.println();
 
@@ -154,7 +154,7 @@ void loop()
         arrival = waitForArrivalOrTimeout(pos, 2000);
         if (!arrival)
         {
-            Serial.print("timout");
+            Serial.print(F("timout"));
             Serial.println();
             continue;
         }
@@ -164,11 +164,11 @@ void loop()
         for (int i = 0; i < 20; i++)
         {
 
-            Serial.print("delay :");
+            Serial.print(F("delay :"));
             Serial.print(i * 50);
-            Serial.print(" pos:");
+            Serial.print(F(" pos:"));
             Serial.print(motor.getPosition());
-            Serial.print(" output:");
+            Serial.print(F(" output:"));
             Serial.print(motor._pidOutput);
             Serial.println();
 

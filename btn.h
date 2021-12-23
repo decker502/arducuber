@@ -1,66 +1,68 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include <BricktronicsButton.h>
-#include <BricktronicsMegashield.h>
+// Arduino header files
+// #include <stdint.h>
+// #if ARDUINO >= 100
+// #include "Arduino.h"
+// #else
+// #include "WProgram.h"
+// #endif
 
-#include "global.h"
+// Library header files
+#include <utility/BricktronicsSettings.h>
 
+#define BTN_LEFT 0
+#define BTN_RIGHT 1
+#define BTN_UP 2
+#define BTN_DOWN 3
+#define BTN_CONFIRM 4
 
-//-----------------------------------------------------------------------------
-// Routines to detect button presses with auto-repeat when held
-//-----------------------------------------------------------------------------
-#define BTNLEFT 0
-#define BTNCENTER 1
-#define BTNRIGHT 2
-
-
-#define BTN_AUTO_REPEAT_FIRST 1000
-#define BTN_AUTO_REPEAT 30
-
-BricktronicsButton btns[] = {
-  BricktronicsButton(BricktronicsMegashield::SENSOR_2),
-  BricktronicsButton(BricktronicsMegashield::SENSOR_3),
-  BricktronicsButton(BricktronicsMegashield::SENSOR_4)
+const int keysRange[5][2] = {
+    {0, 20},
+    {151, 250},
+    {21, 100},
+    {101, 150},
+    {251, 500},
 };
 
-long btn_time = 0;
-bool btn_left = false;
-bool btn_right = false;
-bool btn_center = false;
-
-bool btn_auto_repeat(byte btn, bool &btn_pressed)
+class Button
 {
-  if (btns[btn].isPressed()) {
-    if (btn_pressed) {
-      long diff = millis()-btn_time;
-      if (diff >= 0) {
-        btn_time += BTN_AUTO_REPEAT;
-        return true;
-      }
-    } else {
-      btn_pressed = true;
-      btn_time = millis()+BTN_AUTO_REPEAT_FIRST;
+public:
+  // Constructor - Simple constructor accepts an input pin
+  Button(uint8_t inputPin) : _inputPin(inputPin) {}
+
+  // Constructor - Advanced constructor accepts a SensorSettings
+  // struct to also override the low-level Arduino functions.
+  Button(const BricktronicsSensorSettings &settings) : _inputPin(settings.ANA) {}
+
+  // Set up the input pin
+  void begin(void)
+  {
+    pinMode(_inputPin, INPUT_PULLUP);
+  }
+
+  // Returns true if the button is currently pressed
+  bool isPressed(byte key)
+  {
+
+    int v = analogRead(_inputPin);
+
+    if (v > keysRange[key][0] && v < keysRange[key][1])
       return true;
-    }
-  } else
-    btn_pressed = false;
-  return false;
-}
+    return false;
+  }
 
-bool leftPressed()
-{
-  return btn_auto_repeat(BTNLEFT, btn_left);
-}
+  // Returns true if the button is currently released
+  bool isReleased(byte key)
+  {
+    return !isPressed(key);
+  }
 
-bool rightPressed()
-{
-  return btn_auto_repeat(BTNRIGHT, btn_right);
-}
+private:
+  // We really don't like to hide things inside private,
+  // but if we did, these would be the private items.
+  uint8_t _inputPin;
+};
 
-bool centerPressed()
-{
-  return btn_auto_repeat(BTNCENTER, btn_center);
-}
-
-#endif
+#endif // #ifndef BUTTON_H

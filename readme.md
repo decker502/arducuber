@@ -46,9 +46,23 @@ Pin 1 includes a 910 ohm resistor connected to GND, which is used as the ID for 
 
 ### 转盘的改造
 
+参考：
 https://tengxiao.wang/index.php/archives/38/
 
+进一步：
+42610 x 8
 
+### 颜色传感器
+
+TCS34725 双孔版本
+
+拼装所需乐高配件:
+
+ 41678 ｘ 1
+ 22961 x 2
+ 18654 x 2
+ 60483 x 2
+6575 x 2
 
 ### 感谢
 

@@ -59,11 +59,11 @@ bool busy(int m)
 void moveAbs(int m, int power, int16_t degree, bool wait = true)
 {
 #ifdef DEBUG
-    Serial.print("moveAbs m:");
+    Serial.print(F("moveAbs m:"));
     Serial.print(m);
-    Serial.print(" power:");
+    Serial.print(F(" power:"));
     Serial.print(power);
-    Serial.print(" degree:");
+    Serial.print(F(" degree:"));
     Serial.print(degree);
 #endif
     // BricktronicsMotor 旋转一圈为 720度， 转化为 BricktronicsMotor 的;
@@ -79,9 +79,9 @@ void moveAbs(int m, int power, int16_t degree, bool wait = true)
     motors[m]._pid.SetOutputLimits(-abs(power) * MAX_M_POWER / 100, abs(power) * MAX_M_POWER / 100);
 #ifdef DEBUG
 
-    Serial.print(" before:");
+    Serial.print(F(" before:"));
     Serial.print(positions[m]);
-    Serial.print(" after:");
+    Serial.print(F(" after:"));
     Serial.print(pos);
 #endif
 
@@ -94,11 +94,11 @@ void moveAbs(int m, int power, int16_t degree, bool wait = true)
         // waitForArrival(m, positions[m]);
 
         // Serial.println();
-        // Serial.print(" moveAbs pos :");
+        // Serial.print(F(" moveAbs pos :"));
         // Serial.print(motors[m].getPosition());
-        // Serial.print(" _pidOutput :");
+        // Serial.print(F(" _pidOutput :"));
         // Serial.print(motors[M_SCAN]._pidOutput);
-        // Serial.print(" positions:");
+        // Serial.print(F(" positions:"));
         // Serial.print(positions[M_SCAN]);
 
         // Serial.println();
@@ -106,7 +106,7 @@ void moveAbs(int m, int power, int16_t degree, bool wait = true)
     }
 #ifdef DEBUG
 
-    Serial.print(" real:");
+    Serial.print(F(" real:"));
     Serial.println(motors[m].getPosition());
 #endif
 }
@@ -114,11 +114,11 @@ void moveAbs(int m, int power, int16_t degree, bool wait = true)
 void moveRel(int m, int power, int16_t degree, bool wait = true)
 {
 #ifdef DEBUG
-    Serial.print("moveRel m:");
+    Serial.print(F("moveRel m:"));
     Serial.print(m);
-    Serial.print(" power:");
+    Serial.print(F(" power:"));
     Serial.print(power);
-    Serial.print(" degree:");
+    Serial.print(F(" degree:"));
     Serial.print(degree);
 #endif
 
@@ -135,9 +135,9 @@ void moveRel(int m, int power, int16_t degree, bool wait = true)
     motors[m]._pid.SetOutputLimits(-abs(power) * MAX_M_POWER / 100, abs(power) * MAX_M_POWER / 100);
 
 #ifdef DEBUG
-    Serial.print(" before:");
+    Serial.print(F(" before:"));
     Serial.print(positions[m]);
-    Serial.print(" :");
+    Serial.print(F(" :"));
     Serial.print(motors[m].getPosition());
 #endif
 
@@ -151,7 +151,7 @@ void moveRel(int m, int power, int16_t degree, bool wait = true)
         positions[m] += pos;
     }
 #ifdef DEBUG
-    Serial.print(" after:");
+    Serial.print(F(" after:"));
     Serial.print(positions[m]);
 #endif
     // motors[m].goToPositionWaitForArrivalOrTimeout(positions[m], 3000);
@@ -163,7 +163,7 @@ void moveRel(int m, int power, int16_t degree, bool wait = true)
         // motors[m].brake();
     }
 #ifdef DEBUG
-    Serial.print(" :");
+    Serial.print(F(" :"));
     Serial.println(motors[m].getPosition());
 #endif
 }

@@ -16,7 +16,7 @@ void TiltAway()
 
 void TiltCal()
 {
-    moveRel(M_TILT, 40, 10);
+    // moveRel(M_TILT, 40, 10);
     endstop(M_TILT, -20);
 
     reset(M_TILT);
@@ -26,7 +26,7 @@ void TiltCal()
 
 void TiltHold()
 {
-    moveAbs(M_TILT, 60, tiltOffset + 85);
+    moveAbs(M_TILT, 60, 97);
 }
 
 void Tilt(int n = 1)
@@ -38,7 +38,7 @@ void Tilt(int n = 1)
         // 使用原参数时，底座横轴与主横梁平行时，底座会发生倾斜式跳动，导致魔方会翻转过头
         // 参见 readme 中 转盘的改造说明
         // moveAbs(M_TILT, 100, tiltOffset + 195);
-        moveAbs(M_TILT, 80, tiltOffset + 150);
+        moveAbs(M_TILT, 80, 160);
         // moveRel(M_TILT, 75, -15);
         // delay(5);
         // moveAbs(M_TILT, 75, tiltOffset + 60);

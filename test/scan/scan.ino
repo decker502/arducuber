@@ -1,7 +1,7 @@
 
 
-#include "global.h"
-#include "device.h"
+#include "../../global.h"
+#include "../../device.h"
 
 void setup()
 {
@@ -21,9 +21,8 @@ void setup()
   // lcd.begin(16, 2);
   // led.begin();
 
-  btns[BTNCENTER].begin();
-  btns[BTNLEFT].begin();
-  btns[BTNRIGHT].begin();
+  btn.begin();
+
 
   // Initialize the motor connections
   motors[M_TURN].begin();
@@ -99,13 +98,13 @@ void testScan()
   moveAbs(M_SCAN, 100, -720); // middle
   delay(500);
   colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-  printRGB();
+
   delay(5000);
 
   moveAbs(M_TURN, 100, -112);
   moveAbs(M_SCAN, 80, -553); // corner
   colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-  printRGB();
+
   delay(2000);
 
   moveAbs(M_TURN, 100, -249);
