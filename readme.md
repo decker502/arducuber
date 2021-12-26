@@ -1,5 +1,42 @@
 
-## 触碰传感器的改造
+# 乐高魔方机器人
+
+基于开源硬件 Arduino Mega2650 和 [MindCuber](http://mindcuber.com) 打造最便宜、高魔方兼容性、高成功率的乐高魔方机器人。
+所有硬件都是某宝可以买到，而且价格亲民。
+
+## 方案选择
+
+- 积木部分选择乐高 EV3 套装， 拼搭说明见 [How to build MindCub3r for LEGO MINDSTORMS EV3](http://mindcuber.com/mindcub3r/mindcub3r.html)
+- 程序部分参考 [MindCuber 源码](http://mindcuber.com/mindcuber/mindcuber-source.html)
+- 主控 Arduino Mega2650
+- 传感器控制板 [Bricktronics Megashield](https://github.com/wayneandlayne/BricktronicsHardware)
+- 颜色传感器 [TCS34725](assets/tcs34725.png)
+- 马达
+- 超声波传感器
+  
+### 转盘的改造
+
+为了减小魔方在转盘中的活动空间，使扫描位置更精确，使用 8 个 42610 替换原先的 62462。
+
+参考：
+https://tengxiao.wang/index.php/archives/38/
+
+### 颜色传感器
+
+TCS34725 双孔版本
+
+拼装所需乐高配件:
+
+ 41678 ｘ 1
+ 22961 x 2
+ 18654 x 2
+ 60483 x 2
+6575 x 2
+
+
+### 触碰传感器的改造
+
+` 本项目并没有用到触碰传感器 `
 
 BricktronicsButton 只支持 Nxt Touch Sensor, 要想使用 Ev3 Touch Sensor 需要进行改造
 
@@ -15,9 +52,12 @@ BricktronicsButton 的 input pin 设为了 pullup模式， 即没有外接负载
 
 改造思路
 
-Ev3 Touch Sensor 的引脚4 由接 5V 改为 GND， 使机械开关按下后，引脚 6 输出为低电平 。其他不变。
-
+- Ev3 Touch Sensor 的引脚4 由接 5V 改为 GND， 使机械开关按下后，引脚 6 输出为低电平 。其他不变。
+  
 只需改连接线即可，将排线的3,4线剪断， 连接Touch Sensor 一端的 4 线连到另一端的3线，注意此时排线只能单向使用。此时 Touch Sensor 一端的3线是断开状态，另一端的4线是断开状态。
+
+- Bricktronics 上相应的 Sensor 跳线连接 4 和 5 脚
+
 
 ![gaizao.png](assets/gaizao.png)  
 
@@ -44,30 +84,20 @@ Pin 1 includes a 910 ohm resistor connected to GND, which is used as the ID for 
 ![nxt-btn-sensor](assets/nxt-btn-sensor.png)
 
 
-### 转盘的改造
 
-参考：
-https://tengxiao.wang/index.php/archives/38/
-
-进一步：
-42610 x 8
-
-### 颜色传感器
-
-TCS34725 双孔版本
-
-拼装所需乐高配件:
-
- 41678 ｘ 1
- 22961 x 2
- 18654 x 2
- 60483 x 2
-6575 x 2
 
 ### 感谢
 
+http://mindcuber.com/
+
+http://cube20.org
+
 http://www.diy-robots.com/?p=9
+
 https://rubiks-cube-solver.com/zh/
-cube20.org
+
 https://tomas.rokicki.com/cubecontest/
+
 http://www.pazhong.net/?p=435
+
+https://bbs.cmnxt.com/
