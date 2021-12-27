@@ -1,9 +1,22 @@
 
 # 乐高魔方机器人
 
-基于开源硬件 Arduino Mega2650 和 [MindCuber](http://mindcuber.com) 打造最便宜、高魔方兼容性、高成功率的乐高魔方机器人。
-所有硬件都是某宝可以买到，而且价格亲民。
+基于开源硬件 Arduino Mega2650 和 [MindCuber](http://mindcuber.com) 打造最便宜、兼容多款魔方、高成功率的乐高魔方机器人。
+所有硬件都是某宝可以买到，关键是要价格亲民。
 
+已测试兼容的魔方
+- 大雁孤鸿4代 (稳定且识别率高)
+- 小米智能魔方
+- 奇艺魔方
+
+<img src="assets/intro/cuber.jpg" width="50%" />
+<img src="assets/intro/connect.jpg" width="50%" />
+<img src="assets/intro/megashield.jpg" width="50%" />
+
+## 代码分支
+
+- ev3 分支基于 Lego EV3 套装，机械部分改动小，适合初级玩家
+- spike 分支基于 Lego Spike 套装，但动力部分仍用 EV3 的马达，机械部分改动较大，适合有一定动手能力的玩家
 ## 方案选择
 
 - 积木部分选择乐高 EV3 套装， 拼搭说明见 [How to build MindCub3r for LEGO MINDSTORMS EV3](http://mindcuber.com/mindcub3r/mindcub3r.html)
@@ -11,32 +24,96 @@
 - 主控 Arduino Mega2650
 - 传感器控制板 [Bricktronics Megashield](https://github.com/wayneandlayne/BricktronicsHardware)
 - 颜色传感器 [TCS34725](assets/tcs34725.png)
-- 马达
-- 超声波传感器
-  
+- 乐高马达或国产兼容马达
+- 超声波传感器使用 HCSR04
+- ADKeyboard
+
+## 依赖
+
+安装到 Arduino 的 libraries
+- [BricktronicsMegashield](https://github.com/wayneandlayne/BricktronicsMegashield)
+- [BricktronicsMotor](https://github.com/wayneandlayne/BricktronicsMotor)
+
+使用 Arduino IDE 安装
+
+- Adafruit_BusIO
+- Adafruit_TCS34725
+- HCSR04
+- LiquidCrystal_I2C
+
+## 硬件成本
+
+| 器件                    | 数量 | 成本 (RMB) | 描述 |
+| ----------------------- | ---- | ---------- | ---- |
+| Arduino Mega2650        | 1    | 40         | -    |
+| Bricktronics Megashield | 1    | 15         | -    |
+| TCS34725                | 1    | 6.5        | -    |
+| Lego Ev3大马达          | 2    | 80         | -    |
+| Lego Ev3中马达          | 1    | 70         | -    |
+| HCSR04超声波传感器      | 1    | 15.5       | -    |
+| ADKeyboard              | 1    | 4          | -    |
+| LCD1602A                | 1    | 10         | -    |
+| 18650锂电池             | 2    | 10         | -    |
+| 合计                    | -    | 341        | -    | - |
+
+## 搭建说明
+
+机械部分使用EV3积木，参考 [mindcub3r](http://mindcuber.com/mindcub3r/mindcub3r.html) 搭建, 底盘马达接 Megashield 的 Motor1 端口 , 翻转马达接 Megashield 的 Motor2 端口 , 扫描马达接 Megashield 的 Motor3 端口
+### 超声波传感器
+
+使用 Megashield 的 Sensor1 端口, 用跳线连接 4 和 5 脚，Echo 接 RJ12 的 6 脚, Trig 接 5 脚, Vcc 接 4 脚, Gnd 接 3 脚, 其余留空
+
+<img src="assets/intro/hcsr04.jpg" width="50%" />
+
+### 颜色传感器
+
+TCS34725 双孔版本,使用 I2C 连接 Megashield
+
+拼装所需乐高配件:
+
+| 编号  | 数量 |
+| ----- | ---- |
+| 41678 | 1    |
+| 22961 | 2    |
+| 18654 | 2    |
+| 60483 | 2    |
+| 6575  | 2    |
+
+改造图示:
+
+<img src="assets/intro/color1.jpg" width="50%" />
+<img src="assets/intro/color2.jpg" width="50%" />
+<img src="assets/intro/color3.jpg" width="50%" />
+<img src="assets/intro/color4.jpg" width="50%" />
+
+
+### LCD1602A
+
+使用 I2C 连接 Megashield
+
+<img src="assets/intro/lcd1602.jpg" width="50%" />
+
+### ADKeyboard
+使用 Megashield 的 Sensor2 端口, 用跳线连接 3 和 4 脚， Out 接 RJ12 的 6 脚, Vcc 接 4 脚, Gnd 接 3 脚, 其余留空
+
+<img src="assets/intro/keyboard.jpg" width="50%" />
+
 ### 转盘的改造
 
 为了减小魔方在转盘中的活动空间，使扫描位置更精确，使用 8 个 42610 替换原先的 62462。
 
+改造图示:
+
+<img src="assets/intro/dipan.jpg" width="50%" />
+
 参考：
 https://tengxiao.wang/index.php/archives/38/
 
-### 颜色传感器
-
-TCS34725 双孔版本
-
-拼装所需乐高配件:
-
- 41678 ｘ 1
- 22961 x 2
- 18654 x 2
- 60483 x 2
-6575 x 2
 
 
 ### 触碰传感器的改造
 
-` 本项目并没有用到触碰传感器 `
+` 本项目的Spike分支才有用到触碰传感器 `
 
 BricktronicsButton 只支持 Nxt Touch Sensor, 要想使用 Ev3 Touch Sensor 需要进行改造
 
@@ -50,7 +127,7 @@ Ev3 Touch Sensor 机械开关连接在引脚 4 （5V） 和 引脚 6  之间 ，
 
 BricktronicsButton 的 input pin 设为了 pullup模式， 即没有外接负载时，为高电平 。当按下机械开关后, 引脚连通GND，使电平发生变化，input pin即变为低电平 。详见 Arduino 的引脚模式设置。
 
-改造思路
+#### 改造方法
 
 - Ev3 Touch Sensor 的引脚4 由接 5V 改为 GND， 使机械开关按下后，引脚 6 输出为低电平 。其他不变。
   
