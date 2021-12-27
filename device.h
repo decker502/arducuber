@@ -13,7 +13,7 @@
 #include "solver.h"
 #include "validator.h"
 
-Adafruit_TCS34725 colorSensor = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_2_4MS, TCS34725_GAIN_60X);
+Adafruit_TCS34725 colorSensor = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_24MS, TCS34725_GAIN_60X);
 
 CubeColors cubeColors = CubeColors();
 Validator validator = Validator();

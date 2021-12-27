@@ -23,9 +23,9 @@
 #define T_OVR 57
 
 // tcs34725 two 
-#define T_SCNT -680
-#define T_SEDG -580
-#define T_SCNR -550
+#define T_SCNT -530
+#define T_SEDG -365
+#define T_SCNR -290
 
 #define T_TILT 140
 #define T_TAWY 20
@@ -57,7 +57,7 @@ const uint8_t EEPROM_ID = 0x99;
 uint8_t white_rgb[3] = {255, 255, 255};
 
 // 齿轮比
-const int ratio[] = {3, 1, 3};
+const float ratio[] = {1, 1, 1};
 
 // 电机位置
 int32_t positions[] = {0, 0, 0};

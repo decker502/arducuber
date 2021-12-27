@@ -2,6 +2,11 @@
 #define MOTOR_H
 
 #include "global.h"
+#include <BricktronicsMegashield.h>
+#include <BricktronicsButton.h>
+
+BricktronicsButton colorEndBtn(BricktronicsMegashield::SENSOR_3);
+
 
 BricktronicsMotor motors[] = {
     BricktronicsMotor(BricktronicsMegashield::MOTOR_1),
@@ -69,12 +74,12 @@ void moveAbs(int m, int power, int16_t degree, bool wait = true)
     // BricktronicsMotor 旋转一圈为 720度， 转化为 BricktronicsMotor 的;
     // BricktronicsMotor 旋转旋转方向与EV3相反, 需要取反
 
-    int32_t pos = int32_t(abs(degree)) * 2;
+    int32_t pos = int32_t(degree) * 2;
     //正向
-    if ((power > 0 && degree > 0) || (power < 0 && degree < 0))
-    {
-        pos = -pos;
-    }
+    // if ((power > 0 && degree > 0) || (power < 0 && degree < 0))
+    // {
+    //     pos = -pos;
+    // }
 
     motors[m]._pid.SetOutputLimits(-abs(power) * MAX_M_POWER / 100, abs(power) * MAX_M_POWER / 100);
 #ifdef DEBUG
@@ -114,12 +119,12 @@ void moveRel(int m, int power, int16_t degree, bool wait = true)
     // BricktronicsMotor 旋转一圈为 720度， 转化为 BricktronicsMotor 的;
     // BricktronicsMotor 旋转旋转方向与EV3相反, 需要取反
 
-    int32_t pos = abs(degree) * 2;
+    int32_t pos = int32_t(degree) * 2;
     //正向
-    if ((power > 0 && degree > 0) || (power < 0 && degree < 0))
-    {
-        pos = -pos;
-    }
+    // if ((power > 0 && degree > 0) || (power < 0 && degree < 0))
+    // {
+    //     pos = -pos;
+    // }
 
     motors[m]._pid.SetOutputLimits(-abs(power) * MAX_M_POWER / 100, abs(power) * MAX_M_POWER / 100);
 
@@ -157,7 +162,7 @@ void moveRel(int m, int power, int16_t degree, bool wait = true)
 
 void move(int m, int power)
 {
-    power = -power;
+    // power = -power;
 
     motors[m].setFixedDrive(power * MAX_M_POWER / 100);
 }
@@ -173,7 +178,7 @@ void brake(int m)
 void endstop(int m, int power, int wait = 200)
 {
     // BricktronicsMotor 旋转旋转方向与EV3相反, 需要取反
-    power = -power;
+    // power = -power;
 
     int32_t p0, p1;
     motors[m].setFixedDrive(power * MAX_M_POWER / 100);
@@ -204,6 +209,16 @@ void endstop(int m, int power, int wait = 200)
     positions[m] = motors[m].getPosition();
 
     Serial.println(F(" "));
+}
+
+void colorEndstop(int m, int power)
+{
+    motors[m].setFixedDrive(power * MAX_M_POWER / 100);
+    while (!colorEndBtn.isPressed())
+    {
+
+    };
+    // positions[m] = motors[m].getPosition();
 }
 
 void reset(int m)

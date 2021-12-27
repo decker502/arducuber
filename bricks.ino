@@ -29,6 +29,7 @@ void setup()
   }
 
   btn.begin();
+  colorEndBtn.begin();
 
   // Initialize the motor connections
   motors[M_TURN].begin();
@@ -177,11 +178,11 @@ void CubeInsert()
     }
     if (btn.isPressed(BTN_LEFT))
     {
-      moveRel(M_TURN, 75, 2 * ratio[M_TURN], true);
+      moveRel(M_TURN, 30, 6 * ratio[M_TURN], true);
     }
     if (btn.isPressed(BTN_RIGHT))
     {
-      moveRel(M_TURN, 75, -2 * ratio[M_TURN], true);
+      moveRel(M_TURN, 30, -6 * ratio[M_TURN], true);
     }
     delay(10);
   }
@@ -265,7 +266,6 @@ bool Solve(byte *cube)
   }
   if (solved)
   {
-    ScanAway();
 
     lcd.clear();
     lcd.setCursor(1, 0);
@@ -384,6 +384,32 @@ void loop()
   TiltCal();
   delay(500);
 
+  // moveAbs(M_SCAN, 100, T_SCNT);
+  // moveAbs(M_SCAN, 100, T_SEDG);
+  // moveAbs(M_SCAN, 100, T_SCNR);
+
+  // Tilt();
+  //     TiltAway();
+  // while(true) {
+  // Spin(1);
+  // delay(1000);
+  // }
+
+  // while (true)
+  // {
+  //           TiltAway();
+  //           Spin(-1);
+  //           delay(1000);
+  //           Tilt();
+
+  //           TiltHold();
+
+  //           Spin(2);
+  //           delay(1000);
+
+  // }
+
+// TiltHold();
   bool cal_white = false;
 
   while (true)
@@ -418,6 +444,8 @@ void loop()
     lcd.print("Scanning...");
 
     Solve(cube);
+
+    Show();
 
     lcd.clear();
     lcd.setCursor(0, 1);
