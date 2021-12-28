@@ -28,7 +28,7 @@ const byte opposite[] = {CUBE_DOWN, CUBE_BACK, CUBE_UP, CUBE_FRONT, CUBE_LEFT, C
 
 const byte imap[] = {
     /*       U   F   D   B   R   L */
-    /* U */  -1, 0, -1, 1, 2, 3,
+    /* U */ -1, 0, -1, 1, 2, 3,
     /* F */ 4, -1, 5, -1, 6, 7,
     /* D */ -1, 8, -1, 9, 10, 11,
     /* B */ 12, -1, 13, -1, 14, 15,
@@ -617,7 +617,7 @@ public:
             uc = fmap[map + CUBE_FRONT];
             fc = fmap[map + CUBE_UP];
             TiltAway();
-            Spin(-2);
+            Spin(-2, 0);
             Tilt();
         }
         else if (fmap[map + CUBE_RIGHT] == f)
@@ -625,7 +625,7 @@ public:
             uc = fmap[map + CUBE_LEFT];
             fc = fmap[map + CUBE_UP];
             TiltAway();
-            Spin(-1);
+            Spin(-1, 0);
             Tilt();
         }
         else
@@ -633,7 +633,7 @@ public:
             uc = fmap[map + CUBE_RIGHT];
             fc = fmap[map + CUBE_UP];
             TiltAway();
-            Spin(1);
+            Spin(1, 0);
             Tilt();
         }
         delay(150);

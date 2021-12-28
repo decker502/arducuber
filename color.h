@@ -223,7 +223,7 @@ public:
     sort_clrs(1 * s, 4 * s, cmp_r_gr);
 
     // R O 排序
-    sort_clrs(1 * s, 2 * s, cmp_b_gr);
+    sort_clrs(1 * s, 2 * s, cmp_h);
 
     // Red / Orange 以不同方式重试
     switch (t % 6)
@@ -231,7 +231,7 @@ public:
     case 0: /* already sorted by hue */
       break;
     case 1:
-      sort_clrs(1 * s, 2 * s, cmp_h);
+      sort_clrs(1 * s, 2 * s, cmp_r_g);
       break;
     case 2:
       sort_clrs(1 * s, 2 * s, cmp_b_g);

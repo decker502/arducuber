@@ -23,9 +23,9 @@
 #define T_OVR 57
 
 // tcs34725 two 
-#define T_SCNT -680
-#define T_SEDG -580
-#define T_SCNR -550
+#define T_SCNT -675
+#define T_SEDG -575
+#define T_SCNR -545
 
 #define T_TILT 140
 #define T_TAWY 20

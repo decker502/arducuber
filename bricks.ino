@@ -384,6 +384,17 @@ void loop()
   TiltCal();
   delay(500);
 
+  // moveAbs(M_SCAN, 100, T_SCNT);
+  // moveAbs(M_SCAN, 100, T_SEDG);
+  // moveAbs(M_SCAN, 100, T_SCNR);
+
+  // while (true)
+  // {
+  //   Tilt();
+  //   TiltAway();
+  //   Spin(1);
+  // }
+
   bool cal_white = false;
 
   while (true)
@@ -418,6 +429,8 @@ void loop()
     lcd.print("Scanning...");
 
     Solve(cube);
+
+    Show();
 
     lcd.clear();
     lcd.setCursor(0, 1);

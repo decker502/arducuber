@@ -58,7 +58,7 @@ void ScanRGB(int face, int piece, uint8_t *rgb)
 #endif
 
     // colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-    delay((256 - TCS34725_INTEGRATIONTIME_2_4MS) * 12 / 5 + 1);
+    // delay((256 - TCS34725_INTEGRATIONTIME_24MS) * 12 / 5 + 1);
     float red, green, blue;
     colorSensor.getRGB(&red, &green, &blue);
     rgb[0] = uint8_t(red);
@@ -151,7 +151,7 @@ void ScanCorner(int face, int piece)
         start = millis();
         moveAbs(M_SCAN, 100, T_SCNR, false);
 
-        moveRel(M_TURN, 70, -45 * ratio[M_TURN], false);
+        Spin45(false);
 #ifdef DEBUG
         Serial.print(F("ScanCorner; wait scan"));
         Serial.println();
@@ -183,7 +183,7 @@ void ScanEdge(int face, int piece)
         start = millis();
         moveAbs(M_SCAN, 100, T_SEDG, false);
 
-        moveRel(M_TURN, 70, -45 * ratio[M_TURN], false);
+        Spin45(false);
 #ifdef DEBUG
         Serial.print(F("ScanEdge; wait scan"));
         Serial.println();
@@ -260,7 +260,8 @@ bool ScanCube()
     cubeColors.print(0);
 
     ScanAway();
-    Spin(1);
+    Spin(1, 0);
+    delay(50);
     Tilt(1);
     ScanFace(4, 6);
     cubeColors.print(4);
@@ -269,6 +270,9 @@ bool ScanCube()
     Tilt(2);
     ScanFace(5, 2);
     cubeColors.print(5);
+
+    ScanAway();
+
 }
 
 #endif
