@@ -16,15 +16,18 @@ int scanBlue[NFACE * 8];
 void ScanAway()
 {
     moveAbs(M_SCAN, 50, -40);
+    delay(200);
+    brake(M_SCAN);
 }
 
 void ScanCal()
 {
     //根据实际测试，比 mindcuber的值略大
-    colorEndstop(M_SCAN, 30);
-    // moveRel(M_SCAN, 100, -100);
-    // endstop(M_SCAN, 50, 500);
+    colorEndstop(M_SCAN, 50);
+
     reset(M_SCAN);
+    // moveAbs(M_SCAN, 60, -60);
+    // delay(200);
     ScanAway();
 }
 
@@ -57,7 +60,7 @@ void ScanRGB(int face, int piece, uint8_t *rgb)
 #endif
 
     // colorSensor.getRGB(&rgb[0], &rgb[1], &rgb[2], &c);
-    delay((256 - TCS34725_INTEGRATIONTIME_24MS) * 12 / 5 + 1);
+    // delay((256 - TCS34725_INTEGRATIONTIME_24MS) * 12 / 5 + 1);
     float red, green, blue;
     colorSensor.getRGB(&red, &green, &blue);
     rgb[0] = uint8_t(red);
@@ -138,10 +141,7 @@ void ScanCorner(int face, int piece)
 {
     start = millis();
 #ifdef DEBUG
-    Serial.print(F("ScanCorner; face:"));
-    Serial.print(face);
-    Serial.print(F(" piece:"));
-    Serial.print(piece);
+    Serial.print(F("ScanCorner:"));
     Serial.println();
 #endif
     if (scanOK)
@@ -170,10 +170,7 @@ void ScanEdge(int face, int piece)
 {
 #ifdef DEBUG
     start = millis();
-    Serial.print(F("ScanEdge; face:"));
-    Serial.print(face);
-    Serial.print(F(" piece:"));
-    Serial.println(piece);
+    Serial.print(F("ScanEdge:"));
     Serial.println();
 #endif
 
@@ -216,7 +213,7 @@ void ScanFace(int face, int offset)
         scanOK = true;
         ScanMiddle(face);
 
-        brake(M_TILT);
+        // brake(M_TILT);
 
         start = millis();
 
@@ -228,12 +225,10 @@ void ScanFace(int face, int offset)
             ScanEdge(face, p);
             offset = (offset + 2) & 7;
         }
-       
 
     } while (!scanOK);
 #ifdef DEBUG
 
-    Serial.println();
     Serial.println();
 #endif
 }
@@ -244,34 +239,33 @@ bool ScanCube()
     ScanFace(3, 2);
     cubeColors.print(3);
     ScanAway();
-    Tilt(1);
+    Tilt(1, false);
     ScanFace(2, 2);
     cubeColors.print(2);
 
     ScanAway();
-    Tilt(1);
+    Tilt(1, false);
     ScanFace(1, 2);
     cubeColors.print(1);
 
     ScanAway();
-    Tilt(1);
+    Tilt(1, false);
     ScanFace(0, 2);
     cubeColors.print(0);
 
     ScanAway();
-    Spin(1, 0);
+    Spin(1);
     delay(100);
-    Tilt(1);
+    Tilt(1, false);
     ScanFace(4, 6);
     cubeColors.print(4);
 
     ScanAway();
-    Tilt(2);
+    Tilt(2, false);
     ScanFace(5, 2);
     cubeColors.print(5);
 
     ScanAway();
-
 }
 
 #endif

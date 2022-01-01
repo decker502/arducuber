@@ -618,6 +618,7 @@ public:
             fc = fmap[map + CUBE_UP];
             TiltAway();
             Spin(-2);
+            delay(100);
             Tilt();
         }
         else if (fmap[map + CUBE_RIGHT] == f)
@@ -626,6 +627,7 @@ public:
             fc = fmap[map + CUBE_UP];
             TiltAway();
             Spin(-1);
+            delay(100);
             Tilt();
         }
         else
@@ -634,18 +636,19 @@ public:
             fc = fmap[map + CUBE_UP];
             TiltAway();
             Spin(1);
+            delay(100);
             Tilt();
         }
         delay(150);
         rotate(cube, f, r);
         // display_cube(cube);
 
-        Serial.print(F("manipulate; r:"));
-        Serial.print(r);
-        Serial.print(F(" rn:"));
-        Serial.println(rn);
+        // Serial.print(F("manipulate; r:"));
+        // Serial.print(r);
+        // Serial.print(F(" rn:"));
+        // Serial.println(rn);
 
-        Spin(r);
+        SpinFace(r, rn);
     }
 
 public:

@@ -7,7 +7,6 @@
 
 BricktronicsButton colorEndBtn(BricktronicsMegashield::SENSOR_3);
 
-
 BricktronicsMotor motors[] = {
     BricktronicsMotor(BricktronicsMegashield::MOTOR_1),
     BricktronicsMotor(BricktronicsMegashield::MOTOR_2),
@@ -96,7 +95,6 @@ void moveAbs(int m, int power, int16_t degree, bool wait = true)
     if (wait)
     {
         waitForArrival(m);
-
     }
 #ifdef DEBUG
 
@@ -216,7 +214,13 @@ void colorEndstop(int m, int power)
     motors[m].setFixedDrive(power * MAX_M_POWER / 100);
     while (!colorEndBtn.isPressed())
     {
+        delay(1);
+    };
+    motors[m].setFixedDrive(-power * MAX_M_POWER / 100);
 
+    while (!colorEndBtn.isReleased())
+    {
+        delay(1);
     };
     // positions[m] = motors[m].getPosition();
 }
