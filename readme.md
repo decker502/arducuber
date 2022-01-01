@@ -10,7 +10,9 @@
 - 奇艺魔方
 
 <img src="assets/intro/cuber.jpg" width="50%" />
+
 <img src="assets/intro/connect.jpg" width="50%" />
+
 <img src="assets/intro/megashield.jpg" width="50%" />
 
 ## 代码分支
@@ -19,7 +21,9 @@
 - spike 分支基于 Lego Spike 套装，但动力部分仍用 EV3 的马达，机械部分改动较大，适合有一定动手能力的玩家
 ## 方案选择
 
-- 积木部分选择乐高 EV3 套装， 拼搭说明见 [How to build MindCub3r for LEGO MINDSTORMS EV3](http://mindcuber.com/mindcub3r/mindcub3r.html)
+- 积木部分
+  - ev3 分支选择乐高 EV3 套装， 拼搭说明见 [How to build MindCub3r for LEGO MINDSTORMS EV3](http://mindcuber.com/mindcub3r/mindcub3r.html)
+  - spike 分支选择乐高 Spike 套装， 拼搭说明见 [How to build PrimeCuber for LEGO Education SPIKE Prime](http://mindcuber.com/primecuber/primecuber.html)
 - 程序部分参考 [MindCuber 源码](http://mindcuber.com/mindcuber/mindcuber-source.html)
 - 主控 Arduino Mega2650
 - 传感器控制板 [Bricktronics Megashield](https://github.com/wayneandlayne/BricktronicsHardware)
@@ -58,7 +62,12 @@
 
 ## 搭建说明
 
-机械部分使用EV3积木，参考 [mindcub3r](http://mindcuber.com/mindcub3r/mindcub3r.html) 搭建, 底盘马达接 Megashield 的 Motor1 端口 , 翻转马达接 Megashield 的 Motor2 端口 , 扫描马达接 Megashield 的 Motor3 端口
+机械部分
+
+- ev3 分支使用 EV3 套装，拼搭说明见 [How to build MindCub3r for LEGO MINDSTORMS EV3](http://mindcuber.com/mindcub3r/mindcub3r.html)
+- spike 分支选择乐高 Spike 套装， 拼搭说明见 [How to build PrimeCuber for LEGO Education SPIKE Prime](http://mindcuber.com/primecuber/primecuber.html)
+
+底盘马达接 Megashield 的 Motor1 端口 , 翻转马达接 Megashield 的 Motor2 端口 , 扫描马达接 Megashield 的 Motor3 端口
 ### 超声波传感器
 
 使用 Megashield 的 Sensor1 端口, 用跳线连接 4 和 5 脚，Echo 接 RJ12 的 6 脚, Trig 接 5 脚, Vcc 接 4 脚, Gnd 接 3 脚, 其余留空
