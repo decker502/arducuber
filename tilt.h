@@ -19,11 +19,12 @@ void TiltAway()
 void TiltCal()
 {
     // moveRel(M_TILT, 40, 10);
-    endstop(M_TILT, -20);
+    endstop(M_TILT, -40);
 
     reset(M_TILT);
 
-    TiltAway();
+    brake(M_TILT);
+    // TiltAway();
 }
 
 void TiltHold(bool wait = true)

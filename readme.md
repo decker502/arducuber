@@ -17,8 +17,8 @@
 
 ## 代码分支
 
-- ev3 分支基于 Lego EV3 套装，机械部分改动小，适合初级玩家
-- spike 分支基于 Lego Spike 套装，但动力部分仍用 EV3 的马达，机械部分改动较大，适合有一定动手能力的玩家
+- ev3 分支基于 Lego EV3 套装，机械部分改动小，适合初级玩家，马达采用 Lego 原装马达
+- spike 分支基于 Lego Spike 套装，但为了测试兼容性，动力部分采用某宝国产兼容 Lego 马达，而且机械部分改动较大，适合有一定动手能力的玩家
 ## 方案选择
 
 - 积木部分
@@ -68,6 +68,15 @@
 - spike 分支选择乐高 Spike 套装， 拼搭说明见 [How to build PrimeCuber for LEGO Education SPIKE Prime](http://mindcuber.com/primecuber/primecuber.html)
 
 底盘马达接 Megashield 的 Motor1 端口 , 翻转马达接 Megashield 的 Motor2 端口 , 扫描马达接 Megashield 的 Motor3 端口
+
+### 运行
+
+如果使用锂电池供电，需要确保电池电量充足。
+
+- 上传代码
+- 按下ADKeyboard 的 `确认按钮` 启动机器人
+- 按下ADKeyboard 的 `左右按钮` 校准底盘位置，确保垂直于中轴线
+- 放入打乱的魔方，机器人会自动识别并还原
 ### 超声波传感器
 
 使用 Megashield 的 Sensor1 端口, 用跳线连接 4 和 5 脚，Echo 接 RJ12 的 6 脚, Trig 接 5 脚, Vcc 接 4 脚, Gnd 接 3 脚, 其余留空
