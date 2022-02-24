@@ -151,7 +151,7 @@ BricktronicsButton 的 input pin 设为了 pullup模式， 即没有外接负载
   
 只需改连接线即可，将排线的3,4线剪断， 连接Touch Sensor 一端的 4 线连到另一端的3线，注意此时排线只能单向使用。此时 Touch Sensor 一端的3线是断开状态，另一端的4线是断开状态。
 
-- Bricktronics 上相应的 Sensor 跳线连接 4 和 5 脚
+- Bricktronics 上相应的 Sensor 跳线连接 3 和 4 脚
 
 
 ![gaizao.png](assets/gaizao.png)  
